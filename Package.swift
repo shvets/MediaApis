@@ -10,11 +10,11 @@ let package = Package(
     .tvOS(.v10)
   ],
   products: [
-    .library(name: "MediaApis", targets: ["MediaApis"])
-    //.executable(name: "grabbook", targets: ["GrabBook"])
+    .library(name: "MediaApis", targets: ["MediaApis"]),
+    .executable(name: "grabbook", targets: ["GrabBook"])
   ],
   dependencies: [
-    .package(url: "https://github.com/ReactiveX/RxSwift", from: "4.3.1"),
+    .package(url: "https://github.com/ReactiveX/RxSwift", from: "5.0.1"),
     .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.0.0"),
     .package(url: "https://github.com/JohnSundell/Files", from: "3.1.0"),
     .package(path: "../SimpleHttpClient")
@@ -23,16 +23,16 @@ let package = Package(
     .target(
       name: "MediaApis",
       dependencies: [
-        "SimpleHttpClient",
         "RxSwift",
         "SwiftSoup",
-        "Files"
+        "Files",
+        "SimpleHttpClient"
       ]),
-    //.target(
-    //  name: "GrabBook",
-    //  dependencies: [
-    //    "MediaApis"
-    //  ]),
+    .target(
+      name: "GrabBook",
+      dependencies: [
+        "MediaApis"
+      ]),
     .testTarget(
       name: "MediaApisTests",
       dependencies: [

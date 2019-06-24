@@ -2,6 +2,7 @@ import Foundation
 import Files
 
 import SimpleHttpClient
+import MediaApis
 
 //protocol AudioClient {
 //  func getAudioTracks(_ path: String) throws -> [Track]
@@ -57,7 +58,7 @@ open class MyDownloadManager: DownloadManager {
             print("\(to.path) --- exist")
           }
           else {
-            try downloadFile(from: path, to: to)
+            downloadFile(from: path, to: to)
           }
         }
 
@@ -84,7 +85,7 @@ open class MyDownloadManager: DownloadManager {
             print("\(to.path) --- exist")
           }
           else {
-            try downloadFile(from: path, to: to)
+            downloadFile(from: path, to: to)
           }
         }
       }
@@ -115,7 +116,7 @@ open class MyDownloadManager: DownloadManager {
               print("\(to.path) --- exist")
             }
             else {
-              try downloadFile(from: path, to: to)
+              downloadFile(from: path, to: to)
             }
           }
         }
@@ -133,10 +134,10 @@ open class MyDownloadManager: DownloadManager {
     return destinationDir.appendingPathComponent(name)
   }
 
-  public func downloadFile(from: String, to: URL) {
+  open func downloadFile(from: String, to: URL) {
     do {
       if let fromUrl = URL(string: from) {
-        try super.download(fromUrl: fromUrl, toUrl: to)
+        try downloadFrom(fromUrl, toUrl: to)
       }
     }
     catch DownloadError.downloadFailed(let message) {
