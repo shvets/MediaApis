@@ -23,34 +23,26 @@ extension EtvnetApiClient {
     self.configFile = configFile
   }
 
-  func loadConfig() {
+  func loadConfig() throws {
     if (configFile.exists()) {
-      do {
-        try self.configFile.read()
-      } catch {
-        print(error)
-      }
+      try self.configFile.read()
     }
   }
 
-  func saveConfig() {
-    do {
-      try self.configFile.write()
-    } catch {
-      print(error)
-    }
+  func saveConfig() throws {
+    try self.configFile.write()
   }
 }
 
 extension EtvnetApiClient {
-  public func resetToken() {
+  public func resetToken() throws {
     _ = configFile.remove("access_token")
     _ = configFile.remove("refresh_token")
     _ = configFile.remove("device_code")
     _ = configFile.remove("user_code")
     _ = configFile.remove("activation_url")
 
-    saveConfig()
+    try saveConfig()
   }
 
   func addAccessToken(params: Set<URLQueryItem>, accessToken: String) -> Set<URLQueryItem> {
@@ -80,7 +72,7 @@ extension EtvnetApiClient {
           self.configFile.items["device_code"] = deviceCode
           self.configFile.items["activation_url"] = authClient.getActivationUrl()
 
-          self.saveConfig()
+          try self.saveConfig()
 
           result = AuthResult(userCode: userCode, deviceCode: deviceCode)
         }
@@ -102,7 +94,7 @@ extension EtvnetApiClient {
         if let refreshToken = refreshToken {
           if let value = try updateToken(refreshToken) {
             self.configFile.items = value.asConfigurationItems()
-            self.saveConfig()
+            try self.saveConfig()
           }
         }
       } catch {
@@ -120,7 +112,7 @@ extension EtvnetApiClient {
               ok = true
 
               self.configFile.items = value.asConfigurationItems()
-              self.saveConfig()
+              try self.saveConfig()
             }
           }
         } catch {
@@ -146,7 +138,7 @@ extension EtvnetApiClient {
             result = value
 
             self.configFile.items = value.asConfigurationItems()
-            saveConfig()
+            try saveConfig()
           }
         }
       } catch {
@@ -203,7 +195,7 @@ extension EtvnetApiClient {
             if let refreshToken = refreshToken {
               if let fullValue = try self.updateToken(refreshToken) {
                 self.configFile.items = fullValue.asConfigurationItems()
-                self.saveConfig()
+                try self.saveConfig()
 
                 result = try self.fullRequest(path: path, to: type, method: method, queryItems: queryItems, unauthorized: true)
               }

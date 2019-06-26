@@ -25,7 +25,11 @@ open class EtvnetAPI {
   public init(configFile: ConfigFile<String>) {
     apiClient.setConfigFile(configFile)
 
-    apiClient.loadConfig()
+    do {
+      try apiClient.loadConfig()
+    } catch {
+      print(error)
+    }
   }
 
   public func authorize(authorizeCallback: @escaping () -> Void) throws {
