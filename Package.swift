@@ -14,7 +14,6 @@ let package = Package(
     .executable(name: "grabbook", targets: ["GrabBook"])
   ],
   dependencies: [
-    .package(url: "https://github.com/ReactiveX/RxSwift", from: "5.0.1"),
     .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.0.0"),
     .package(url: "https://github.com/JohnSundell/Files", from: "3.1.0"),
     .package(path: "../SimpleHttpClient")
@@ -23,7 +22,6 @@ let package = Package(
     .target(
       name: "MediaApis",
       dependencies: [
-        "RxSwift",
         "SwiftSoup",
         "Files",
         "SimpleHttpClient"
