@@ -23,8 +23,9 @@ open class AuthApiClient: ApiClient {
     return "\(baseURL)device/usercode"
   }
   
-  func getActivationCodes(includeClientSecret: Bool = true, includeClientId: Bool = true) ->
-    Observable<ActivationCodesProperties?> {
+  func getActivationCodes(includeClientSecret: Bool = true, includeClientId: Bool = true) throws ->
+    ActivationCodesProperties? {
+    var properties: ActivationCodesProperties?
 
     var queryItems: Set<URLQueryItem> = []
 
@@ -40,18 +41,21 @@ open class AuthApiClient: ApiClient {
 
     let request = ApiRequest(path: "device/code", queryItems: queryItems)
 
-    return self.fetchRx(request).map { response in
-      if let body = response.data {
-        return try self.decode(body, to: ActivationCodesProperties.self)!
-      }
-      else {
-        return nil
-      }
+    let response = try Await.await() { handler in
+      self.fetch(request, handler)
     }
+
+    if let response = response, let body = response.data {
+      properties = try self.decode(body, to: ActivationCodesProperties.self)!
+    }
+
+    return properties
   }
 
   @discardableResult
-  public func createToken(deviceCode: String) -> Observable<AuthProperties?> {
+  public func createToken(deviceCode: String) throws -> AuthProperties? {
+    var properties: AuthProperties?
+
     var queryItems: Set<URLQueryItem> = []
 
     queryItems.insert(URLQueryItem(name: "grant_type", value: GrantType))
@@ -61,18 +65,21 @@ open class AuthApiClient: ApiClient {
 
     let request = ApiRequest(path: "token", queryItems: queryItems)
 
-    return self.fetchRx(request).map { response in
-      if let body = response.data {
-        return try self.decode(body, to: AuthProperties.self)!
-      }
-      else {
-        return nil
-      }
+    let response = try Await.await() { handler in
+      self.fetch(request, handler)
     }
+
+    if let response = response, let body = response.data {
+      properties = try self.decode(body, to: AuthProperties.self)!
+    }
+
+    return properties
   }
 
   @discardableResult
-  func updateToken(refreshToken: String) -> Observable<AuthProperties?> {
+  func updateToken(refreshToken: String) throws -> AuthProperties? {
+    var properties: AuthProperties?
+
     var queryItems: Set<URLQueryItem> = []
 
     queryItems.insert(URLQueryItem(name: "grant_type", value: "refresh_token"))
@@ -82,13 +89,14 @@ open class AuthApiClient: ApiClient {
 
     let request = ApiRequest(path: "token", queryItems: queryItems)
 
-    return self.fetchRx(request).map { response in
-      if let body = response.data {
-        return try self.decode(body, to: AuthProperties.self)!
-      }
-      else {
-        return nil
-      }
+    let response = try Await.await { handler in
+      self.fetch(request, handler)
     }
+
+    if let response = response, let body = response.data {
+      properties = try self.decode(body, to: AuthProperties.self)
+    }
+
+    return properties
   }
 }

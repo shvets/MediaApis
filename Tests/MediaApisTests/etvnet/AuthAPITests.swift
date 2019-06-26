@@ -17,18 +17,16 @@ class AuthAPITests: XCTestCase {
   var subject = EtvnetAPI(configFile: config)
   
   func testGetActivationCodes() throws {
-    if let result = try Await.awaitRx({
-      self.subject.apiClient.authClient.getActivationCodes()
-    }) {
+    if let result = try self.subject.apiClient.authClient.getActivationCodes() {
       XCTAssertNotNil(result)
 
       print("Activation url: \(self.subject.apiClient.authClient.getActivationUrl())")
 
-      if let result = result, let userCode = result.userCode {
+      if let userCode = result.userCode {
         print("Activation code: \(userCode)")        
       }
 
-      if  let result = result, let deviceCode = result.deviceCode {
+      if let deviceCode = result.deviceCode {
         print("Device code: \(deviceCode)") 
       }
     }
@@ -59,18 +57,14 @@ class AuthAPITests: XCTestCase {
   func testUpdateToken() throws {
     let refreshToken = subject.apiClient.configFile.items["refresh_token"]!
 
-    if let result = try self.subject.apiClient.awaitRx({
-      self.subject.apiClient.authClient.updateToken(refreshToken: refreshToken)
-    }) {
-      XCTAssertNotNil(result!.accessToken)
+    if let result = try self.subject.apiClient.authClient.updateToken(refreshToken: refreshToken) {
+      XCTAssertNotNil(result.accessToken)
 
-      print("Result: \(result!)")
+      print("Result: \(result)")
 
-      subject.apiClient.configFile.items = result!.asConfigurationItems()
+      subject.apiClient.configFile.items = result.asConfigurationItems()
 
-      if let _ = try self.subject.apiClient.awaitRx({
-        self.subject.apiClient.configFile.write()
-      }) {
+      if let _ = try self.subject.apiClient.configFile.write() {
         print("Config saved.")
       }
       else {
