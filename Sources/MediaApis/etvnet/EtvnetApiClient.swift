@@ -22,13 +22,13 @@ extension EtvnetApiClient {
     self.configFile = configFile
   }
 
-  func loadConfig() throws {
+  public func loadConfig() throws {
     if (configFile.exists()) {
       try self.configFile.read()
     }
   }
 
-  func saveConfig() throws {
+  public func saveConfig() throws {
     try self.configFile.write()
   }
 }

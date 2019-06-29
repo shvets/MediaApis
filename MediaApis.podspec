@@ -1,4 +1,4 @@
-swift_version = File.new('.swift-version').read
+#swift_version = File.new('.swift-version').read
 
 Pod::Spec.new do |s|
   s.name         = "MediaApis"
@@ -6,6 +6,7 @@ Pod::Spec.new do |s|
   s.summary      = "Media Apis"
   s.description  = "Media Apis."
 
+  s.swift_version = "5.0"
   s.homepage     = "https://github.com/shvets/MediaApis"
   s.authors = { "Alexander Shvets" => "alexander.shvets@gmail.com" }
   s.license      = "MIT"
@@ -18,7 +19,8 @@ Pod::Spec.new do |s|
   s.ios.source_files = "Sources/**/*.swift"
   s.tvos.source_files = "Sources/**/*.swift"
 
-  s.pod_target_xcconfig = { 'SWIFT_VERSION' => swift_version }
+  #s.pod_target_xcconfig = { 'SWIFT_VERSION' => swift_version }
+  s.pod_target_xcconfig = { 'SWIFT_VERSION' => "5.0" }
 
   s.dependency 'SimpleHttpClient', '~> 1.0.0'
 end
