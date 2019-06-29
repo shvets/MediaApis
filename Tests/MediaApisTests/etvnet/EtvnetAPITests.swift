@@ -7,7 +7,7 @@ import SimpleHttpClient
 class EtvnetAPITests: XCTestCase {
   static let path = URL(fileURLWithPath: NSTemporaryDirectory())
 
-  static var configFile = ConfigFile<String>(path: path, fileName: "etvnet.config")
+  static let configFile = ConfigFile<String>(path: path, fileName: "etvnet.config")
 
   var subject = EtvnetAPI(configFile: configFile)
 
@@ -19,7 +19,7 @@ class EtvnetAPITests: XCTestCase {
           if let result = try self.subject.apiClient.authorization() {
             print("Register activation code on web site \(self.subject.apiClient.authClient.getActivationUrl()): \(result.userCode)")
 
-            if let response = self.subject.apiClient.createToken(userCode: result.userCode, deviceCode: result.deviceCode) {
+            if let response = self.subject.apiClient.createToken(deviceCode: result.deviceCode) {
               XCTAssertNotNil(response.accessToken)
               XCTAssertNotNil(response.refreshToken)
 

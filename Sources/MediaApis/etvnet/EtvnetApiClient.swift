@@ -44,7 +44,7 @@ extension EtvnetApiClient {
     try saveConfig()
   }
 
-  func addAccessToken(params: Set<URLQueryItem>, accessToken: String) -> Set<URLQueryItem> {
+  public func addAccessToken(params: Set<URLQueryItem>, accessToken: String) -> Set<URLQueryItem> {
     var newParams: Set<URLQueryItem> = []
 
     for param in params {
@@ -81,7 +81,7 @@ extension EtvnetApiClient {
     return result
   }
 
-  func checkAuthorization() -> Bool {
+  public func checkAuthorization() -> Bool {
     var ok = false
 
     if checkAccessData("access_token") {
@@ -123,7 +123,7 @@ extension EtvnetApiClient {
     return ok
   }
 
-  func createToken(userCode: String, deviceCode: String) -> AuthProperties? {
+  public func createToken(deviceCode: String) -> AuthProperties? {
     var result: AuthProperties?
 
     var done = false

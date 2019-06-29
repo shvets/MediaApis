@@ -19,7 +19,7 @@ open class EtvnetAPI {
 
   public static let Topics = ["etvslider/main", "newmedias", "best", "top", "newest", "now_watched", "recommend"]
 
-  let apiClient = EtvnetApiClient(EtvnetAPI.ApiUrl, authUrl: EtvnetAPI.AuthUrl)
+  public let apiClient = EtvnetApiClient(EtvnetAPI.ApiUrl, authUrl: EtvnetAPI.AuthUrl)
 
   public init(configFile: ConfigFile<String>) {
     apiClient.setConfigFile(configFile)
