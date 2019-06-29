@@ -18,7 +18,7 @@ open class AuthApiClient: ApiClient {
     "com.etvnet.notifications"
   ].joined(separator: " ")
 
-  func getActivationUrl() -> String {
+  public func getActivationUrl() -> String {
     return "\(baseURL)device/usercode"
   }
   

@@ -2,8 +2,8 @@ import Foundation
 import SimpleHttpClient
 
 public struct AuthResult {
-  let userCode: String
-  let deviceCode: String
+  public let userCode: String
+  public let deviceCode: String
 }
 
 public struct ActivationCodesProperties: Codable, CustomStringConvertible {

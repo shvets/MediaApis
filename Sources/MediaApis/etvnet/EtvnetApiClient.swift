@@ -6,7 +6,7 @@ open class EtvnetApiClient: ApiClient {
 
   public var configFile: ConfigFile<String>!
 
-  let authClient: AuthApiClient!
+  public let authClient: AuthApiClient!
 
   public var authorizeCallback: () -> Void = {}
 
@@ -67,11 +67,11 @@ extension EtvnetApiClient {
       if let value = try self.authClient.getActivationCodes(includeClientSecret: includeClientSecret) {
         if let userCode = value.userCode,
            let deviceCode = value.deviceCode {
-          self.configFile.items["user_code"] = userCode
-          self.configFile.items["device_code"] = deviceCode
-          self.configFile.items["activation_url"] = authClient.getActivationUrl()
+//          self.configFile.items["user_code"] = userCode
+//          self.configFile.items["device_code"] = deviceCode
+//          self.configFile.items["activation_url"] = authClient.getActivationUrl()
 
-          try self.saveConfig()
+          //try self.saveConfig()
 
           result = AuthResult(userCode: userCode, deviceCode: deviceCode)
         }

@@ -7,9 +7,20 @@ import SimpleHttpClient
 class EtvnetAPITests: XCTestCase {
   static let path = URL(fileURLWithPath: NSTemporaryDirectory())
 
-  static let configFile = ConfigFile<String>(path: path, fileName: "etvnet.config")
+  var subject: EtvnetAPI = {
+    let configFile = ConfigFile<String>(path: path, fileName: "etvnet.config")
 
-  var subject = EtvnetAPI(configFile: configFile)
+    var service = EtvnetAPI(configFile: configFile)
+
+    do {
+      try service.apiClient.loadConfig()
+    }
+    catch {
+      print(error)
+    }
+
+    return service
+  }()
 
   override func setUp() {
     super.setUp()
