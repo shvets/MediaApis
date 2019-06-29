@@ -11,6 +11,8 @@ open class KinoTochkaAPI {
   public static func getURLPathOnly(_ url: String, baseUrl: String) -> String {
     return String(url[baseUrl.index(url.startIndex, offsetBy: baseUrl.count)...])
   }
+  
+  public init() {}
 
   func getHeaders(_ referer: String="") -> Set<HttpHeader> {
     var headers: Set<HttpHeader> = []

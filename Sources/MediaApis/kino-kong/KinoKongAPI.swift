@@ -9,6 +9,8 @@ open class KinoKongAPI {
 
   let apiClient = ApiClient(URL(string: SiteUrl)!)
 
+  public init() {}
+  
   public static func getURLPathOnly(_ url: String, baseUrl: String) -> String {
     return String(url[baseUrl.index(url.startIndex, offsetBy: baseUrl.count)...])
   }

@@ -19,7 +19,7 @@ extension BookZvookAPI {
   }
 
   public struct BookResults: Codable {
-    let items: [BookItem]
+    public let items: [BookItem]
     let pagination: Pagination?
 
     init(items: [BookItem] = [], pagination: Pagination? = nil) {

@@ -1,4 +1,5 @@
 import Foundation
+import Files
 import SwiftSoup
 import SimpleHttpClient
 
@@ -406,25 +407,25 @@ open class AudioKnigiAPI {
     return matched
   }
 
-//  public func getItemsInGroups(_ fileName: String) -> [NameClassifier.ItemsGroup] {
-//    var items: [NameClassifier.ItemsGroup] = []
-//
-//    do {
-//      let data: Data? = try File(path: fileName).read()
-//
-//      do {
-//        items = try data!.decoded() as [NameClassifier.ItemsGroup]
-//      }
-//      catch let e {
-//        print("Error: \(e)")
-//      }
-//    }
-//    catch let e {
-//      print("Error: \(e)")
-//    }
-//
-//    return items
-//  }
+  public func getItemsInGroups(_ fileName: String) -> [NameClassifier.ItemsGroup] {
+    var items: [NameClassifier.ItemsGroup] = []
+
+    do {
+      let data: Data? = try File(path: fileName).read()
+
+      do {
+        items = try data!.decoded() as [NameClassifier.ItemsGroup]
+      }
+      catch let e {
+        print("Error: \(e)")
+      }
+    }
+    catch let e {
+      print("Error: \(e)")
+    }
+
+    return items
+  }
 
   public func getDocument(_ path: String = "") throws -> Document? {
     var document: Document? = nil
