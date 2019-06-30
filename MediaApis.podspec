@@ -2,7 +2,7 @@
 
 Pod::Spec.new do |s|
   s.name         = "MediaApis"
-  s.version      = "1.0.1"
+  s.version      = "1.0.2"
   s.summary      = "Media Apis"
   s.description  = "Media Apis."
 
@@ -15,12 +15,16 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = "12.2"
   s.tvos.deployment_target = "12.2"
 
+  s.resource_bundles = {
+    'com.rubikon.MediaApis' => ['Sources/**/*.js']
+  }
+
   s.source_files = "Sources/**/*.swift"
   s.ios.source_files = "Sources/**/*.swift"
   s.tvos.source_files = "Sources/**/*.swift"
 
+  s.dependency 'SimpleHttpClient', '~> 1.0.0'
+
   #s.pod_target_xcconfig = { 'SWIFT_VERSION' => swift_version }
   s.pod_target_xcconfig = { 'SWIFT_VERSION' => "5.0" }
-
-  s.dependency 'SimpleHttpClient', '~> 1.0.0'
 end
