@@ -238,10 +238,12 @@ open class AudioKnigiAPI {
     return result
   }
 
-  public func getAudioTracks(_ path: String) throws -> [Track] {
+  public func getAudioTracks(_ url: String) throws -> [Track] {
     var newTracks = [Track]()
 
     let (cookie, securityLsKey) = try getCookieAndSecurityLsKey()
+
+    let path = AudioKnigiAPI.getURLPathOnly(url, baseUrl: AudioKnigiAPI.SiteUrl)
 
     let response = try apiClient.request(path)
 

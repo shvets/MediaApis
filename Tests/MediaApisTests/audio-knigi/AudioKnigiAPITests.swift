@@ -145,9 +145,9 @@ class AudioKnigiAPITests: XCTestCase {
   }
 
   func testGetAudioTracks() throws {
-    let path = "luchshee-yumoristicheskoe-fentezi-antologiya-chast-1"
+    let url = "\(AudioKnigiAPI.SiteUrl)/luchshee-yumoristicheskoe-fentezi-antologiya-chast-1"
 
-    let result = try subject.getAudioTracks(path)
+    let result = try subject.getAudioTracks(url)
 
     print(try result.prettify())
 
