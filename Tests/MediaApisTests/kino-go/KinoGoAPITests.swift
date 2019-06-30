@@ -129,9 +129,9 @@ class KinoGoAPITests: XCTestCase {
   }
 
   func testGetUrls() throws {
-    let path = "11410-velikiy-uravnitel-2_2018____04-11.html"
+    let url = "\(KinoGoAPI.SiteUrl)/11410-velikiy-uravnitel-2_2018____04-11.html"
 
-    let list = try subject.getUrls(path)
+    let list = try subject.getUrls(url)
 
     print(try list.prettify())
 
@@ -195,10 +195,10 @@ class KinoGoAPITests: XCTestCase {
   }
 
   func testGetSeasons() throws {
-    let path = "/14452-fitnes-1-sezon_2018_17-10.html"
+    let url = "\(KinoGoAPI.SiteUrl)/14452-fitnes-1-sezon_2018_17-10.html"
     //let path = "/5139-into-the-badlands_3-sezon_17-08.html"
 
-    let list = try subject.getSeasons(path, "some name")
+    let list = try subject.getSeasons(url, "some name")
 
     print(try list.prettify())
 

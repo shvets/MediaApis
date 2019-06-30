@@ -242,9 +242,11 @@ open class KinoGoAPI {
     return BookResults(items: collection, pagination: pagination)
   }
 
-  public func getUrls(_ path: String) throws -> [String] {
+  public func getUrls(_ url: String) throws -> [String] {
     var urls: [String] = []
 
+    let path = KinoGoAPI.getURLPathOnly(url, baseUrl: KinoGoAPI.SiteUrl)
+    
     if let document = try getDocument(path) {
       let items = try document.select("script")
 
@@ -408,9 +410,11 @@ open class KinoGoAPI {
     return Pagination(page: page, pages: pages, has_previous: page > 1, has_next: page < pages)
   }
 
-  public func getSeasons(_ path: String, _ name: String?=nil, _ thumb: String?=nil) throws -> [Season] {
+  public func getSeasons(_ url: String, _ name: String?=nil, _ thumb: String?=nil) throws -> [Season] {
     var list: [Season] = []
 
+    let path = KinoGoAPI.getURLPathOnly(url, baseUrl: KinoGoAPI.SiteUrl)
+    
     if let document = try getDocument(path) {
       let items = try document.select("script")
 
