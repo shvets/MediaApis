@@ -1,5 +1,6 @@
 import Foundation
 import SimpleHttpClient
+import Codextended
 
 extension AudioBooAPI {
   public typealias BookItem = [String: String]
@@ -13,7 +14,7 @@ extension AudioBooAPI {
       self.id = id
     }
   }
-  
+
   public struct BooSource: Codable {
     public let file: String
     public let type: String
@@ -49,26 +50,24 @@ extension AudioBooAPI {
 //  }
 
     public init(from decoder: Decoder) throws {
-      let container = try decoder.container(keyedBy: CodingKeys.self)
-
-      title = try container.decode(String.self, forKey: .title)
-      orig = try container.decode(String.self, forKey: .orig)
+      title = try decoder.decode("title")
+      orig = try decoder.decode("orig")
 
       do {
-        image = try container.decode(forKey: .image, default: "")
+        image = (try decoder.decode("image")) ?? ""
       }
       catch {
         image = ""
       }
 
       do {
-        duration = try container.decode(forKey: .duration, default: "")
+        duration = (try decoder.decode("duration")) ?? ""
       }
       catch {
         duration = ""
       }
 
-      sources = try container.decode(forKey: .sources, default: [] as [BooSource])
+      sources = (try decoder.decode("sources")) ?? []
     }
   }
 }

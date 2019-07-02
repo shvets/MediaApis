@@ -16,7 +16,7 @@ let package = Package(
   dependencies: [
     .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.0.0"),
     .package(url: "https://github.com/JohnSundell/Files", from: "3.1.0"),
-//    .package(url: "https://github.com/JohnSundell/Codextended", from: "0.3.0"),
+    .package(url: "https://github.com/JohnSundell/Codextended", from: "0.3.0"),
     .package(path: "../SimpleHttpClient")
   ],
   targets: [
@@ -25,7 +25,7 @@ let package = Package(
       dependencies: [
         "SwiftSoup",
         "Files",
-//        "Codextended",
+        "Codextended",
         "SimpleHttpClient"
       ]),
     .target(

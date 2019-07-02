@@ -1,5 +1,6 @@
 import Foundation
 import SimpleHttpClient
+import Codextended
 
 extension AudioKnigiAPI {
   public typealias BookItem = [String: String]
@@ -76,23 +77,19 @@ extension AudioKnigiAPI {
     }
 
     public init(from decoder: Decoder) throws {
-      let container = try decoder.container(keyedBy: CodingKeys.self)
-
-      let albumName = try container.decode(forKey: .albumName, default: "")
-      let title = try container.decode(forKey: .title, default: "")
-      let url = try container.decode(forKey: .url, default: "")
-      let time = Int(try container.decode(forKey: .time, default: "0"))!
+      let albumName = (try decoder.decode("albumName")) ?? ""
+      let title = (try decoder.decode("title")) ?? ""
+      let url = (try decoder.decode("url")) ?? ""
+      let time = (try decoder.decode("time")) ?? 0
 
       self.init(albumName: albumName, title: title, url: url, time: time)
     }
 
     public func encode(to encoder: Encoder) throws {
-      var container = encoder.container(keyedBy: CodingKeys.self)
-
-      try container.encode(albumName, forKey: .albumName)
-      try container.encode(title, forKey: .title)
-      try container.encode(url, forKey: .url)
-      try container.encode(time, forKey: .time)
+      try encoder.encode(albumName, for: "albumName")
+      try encoder.encode(title, for: "title")
+      try encoder.encode(url, for: "url")
+      try encoder.encode(time, for: "time")
     }
   }
 }
