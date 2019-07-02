@@ -262,7 +262,7 @@ class EtvnetAPITests: XCTestCase {
     XCTAssertNotNil(bookmarkDetails)
   }
 
-  func testAddBookmark() throws {
+  func _testAddBookmark() throws {
     let id = 760894
 
     let _ = try subject.addBookmark(id: id)
@@ -270,7 +270,7 @@ class EtvnetAPITests: XCTestCase {
     //XCTAssertTrue(result)
   }
 
-  func testRemoveBookmark() throws {
+  func _testRemoveBookmark() throws {
     let id = 760894
 
     let _ = try subject.removeBookmark(id: id)
@@ -321,7 +321,7 @@ class EtvnetAPITests: XCTestCase {
     XCTAssert(list.count > 0)
   }
 
-  func testAddFavoriteChannel() throws {
+  func _testAddFavoriteChannel() throws {
     let id = 46
 
     let result = try subject.addFavoriteChannel(id: id)
@@ -329,7 +329,7 @@ class EtvnetAPITests: XCTestCase {
     print(result)
   }
 
-  func testRemoveFavoriteChannel() throws {
+  func _testRemoveFavoriteChannel() throws {
     let id = 46
 
     let result = try subject.removeFavoriteChannel(id: id)
