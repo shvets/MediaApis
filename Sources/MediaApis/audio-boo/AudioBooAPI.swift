@@ -109,8 +109,10 @@ open class AudioBooAPI {
   public func getBooks(_ url: String, page: Int=1) throws -> [BookItem] {
     var result = [BookItem]()
 
-    let path = getPagePath(path: "", page: page)
+    let pagePath = getPagePath(path: "", page: page)
 
+    let path = AudioBooAPI.getURLPathOnly("\(url)\(pagePath)", baseUrl: AudioBooAPI.SiteUrl)
+    
     if let document = try self.getDocument(path) {
       let items = try document.select("div[class=biography-main]")
 
