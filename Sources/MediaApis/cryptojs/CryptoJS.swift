@@ -15,24 +15,22 @@ open class CryptoJS {
 //            let currentBundle = Bundle.allBundles.filter() { $0.bundlePath.hasSuffix(".xctest") }.first!
 //            let realBundle = Bundle(path: "/Users/alex/Dropbox/Alex/work/projects/swift/YagaTV/WebAPI/Sources/WebAPI/cryptojs")
 
-    var bundle = Bundle(identifier: "com.rubikon.MediaApis")
+        var bundle = Bundle(identifier: "com.rubikon.MediaApis")
 
-    let podBundle = Bundle(for: MediaApis.self)
+        let podBundle = Bundle(for: MediaApis.self)
 
-    if let bundleURL = podBundle.url(forResource: "com.rubikon.MediaApis", withExtension: "bundle") {
-      bundle = Bundle(url: bundleURL)!
+        if let bundleURL = podBundle.url(forResource: "com.rubikon.MediaApis", withExtension: "bundle") {
+            bundle = Bundle(url: bundleURL)!
+        }
+
+        let cryptoJSpath = bundle?.path(forResource: "aes", ofType: "js")
+
+        if cryptoJSpath == nil {
+            bundle = Bundle(path: "\(NSHomeDirectory())/Dropbox/Projects/swift/YagaTV2/MediaApis/Sources/MediaApis/cryptojs/components")!
+        }
+
+        return bundle!
     }
-
-    if let b = bundle {
-      let cryptoJSpath = b.path(forResource: "aes", ofType: "js")
-      
-      if cryptoJSpath == nil {
-        bundle = Bundle(path: "\(NSHomeDirectory())/Dropbox/Projects/swift/YagaTV2/MediaApis/Sources/MediaApis/cryptojs/components")!
-      }
-    }
-
-    return bundle!
-  }
 
     open class AES: CryptoJS {
         

@@ -25,6 +25,7 @@ Pod::Spec.new do |s|
 
   s.dependency 'SimpleHttpClient', '~> 1.0.2'
   s.dependency 'Codextended', '~> 0.3.0'
+  s.dependency 'SwiftSoup', '~> 2.0.0'
 
   #s.pod_target_xcconfig = { 'SWIFT_VERSION' => swift_version }
   s.pod_target_xcconfig = { 'SWIFT_VERSION' => "5.0" }

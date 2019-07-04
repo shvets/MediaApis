@@ -77,10 +77,10 @@ extension AudioKnigiAPI {
     }
 
     public init(from decoder: Decoder) throws {
-      let albumName = (try decoder.decode("albumName")) ?? ""
-      let title = (try decoder.decode("title")) ?? ""
-      let url = (try decoder.decode("url")) ?? ""
-      let time = (try decoder.decode("time")) ?? 0
+      let albumName = (try? decoder.decode("cat")) ?? ""
+      let title = (try? decoder.decode("title")) ?? ""
+      let url = (try? decoder.decode("mp3")) ?? ""
+      let time = (try? decoder.decode("time")) ?? 0
 
       self.init(albumName: albumName, title: title, url: url, time: time)
     }
