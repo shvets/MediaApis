@@ -1,9 +1,15 @@
 import Foundation
 import SimpleHttpClient
+import Codextended
 
 public struct AuthResult {
   public let userCode: String
   public let deviceCode: String
+}
+
+public struct ErrorProperties: Codable {
+  public let error: String
+  public let error_description: String
 }
 
 public struct ActivationCodesProperties: Codable, CustomStringConvertible {
@@ -16,10 +22,8 @@ public struct ActivationCodesProperties: Codable, CustomStringConvertible {
   }
 
   public init(from decoder: Decoder) throws {
-    let container = try decoder.container(keyedBy: CodingKeys.self)
-
-    deviceCode = try container.decode(forKey: .deviceCode, default: nil)
-    userCode = try container.decode(forKey: .userCode, default: nil)
+    deviceCode = try decoder.decode("device_code")
+    userCode = try decoder.decode("user_code")
   }
 
   public var description: String {
@@ -41,11 +45,9 @@ public struct AuthProperties: Codable, CustomStringConvertible {
   }
 
   public init(from decoder: Decoder) throws {
-    let container = try decoder.container(keyedBy: CodingKeys.self)
-
-    accessToken = try container.decode(forKey: .accessToken, default: nil)
-    refreshToken = try container.decode(forKey: .refreshToken, default: nil)
-    expiresIn = try container.decode(forKey: .expiresIn, default: nil)
+    accessToken = try decoder.decode("access_token")
+    refreshToken = try decoder.decode("refresh_token")
+    expiresIn = try decoder.decode("expires_in")
 
     if let expiresIn = expiresIn {
       expires = Int(Date().timeIntervalSince1970) + expiresIn

@@ -45,7 +45,9 @@ open class AuthApiClient: ApiClient {
     }
 
     if let response = response, let body = response.data {
-      properties = try self.decode(body, to: ActivationCodesProperties.self)!
+      if let props = try self.decode(body, to: ActivationCodesProperties.self) {
+        properties = props
+      }
     }
 
     return properties
@@ -69,7 +71,14 @@ open class AuthApiClient: ApiClient {
     }
 
     if let response = response, let body = response.data {
-      properties = try self.decode(body, to: AuthProperties.self)!
+      do {
+        _ = try self.decode(body, to: ErrorProperties.self)
+      }
+      catch {
+        if let props = try self.decode(body, to: AuthProperties.self) {
+          properties = props
+        }
+      }
     }
 
     return properties

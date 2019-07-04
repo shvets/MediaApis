@@ -123,7 +123,7 @@ extension EtvnetApiClient {
     return ok
   }
 
-  public func createToken(deviceCode: String) -> AuthProperties? {
+  public func createToken(deviceCode: String, delayCallback: () -> Void = { sleep(5) }) -> AuthProperties? {
     var result: AuthProperties?
 
     var done = false
@@ -145,7 +145,7 @@ extension EtvnetApiClient {
       }
 
       if !done {
-        sleep(5)
+        delayCallback()
       }
     }
 

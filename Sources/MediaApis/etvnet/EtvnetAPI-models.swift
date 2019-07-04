@@ -1,5 +1,6 @@
 import Foundation
 import SimpleHttpClient
+import Codextended
 
 extension EtvnetAPI {
   public enum WatchStatus: Int, RawRepresentable, Codable {
@@ -7,33 +8,33 @@ extension EtvnetAPI {
     case partiallyWatched
     case finished
 
-  public typealias RawValue = Int
+    public typealias RawValue = Int
 
-  public init?(rawValue: RawValue) {
-    switch rawValue {
+    public init?(rawValue: RawValue) {
+      switch rawValue {
       case 0: self = .new
       case 1: self = .partiallyWatched
       case 2: self = .finished
       default: self = .new
+      }
     }
-  }
 
-  public var rawValue: RawValue {
-    switch self {
+    public var rawValue: RawValue {
+      switch self {
       case .new: return 0
       case .partiallyWatched: return 1
       case .finished: return 2
+      }
     }
-  }
 
-  public var description: String {
-    switch self {
+    public var description: String {
+      switch self {
       case .new: return "New"
       case .partiallyWatched: return "Partially Watched"
       case .finished: return "Finished"
+      }
     }
   }
-}
 
   public struct UrlType: Codable {
     public let url: String
@@ -123,44 +124,42 @@ extension EtvnetAPI {
     }
 
     public init(from decoder: Decoder) throws {
-      let container = try decoder.container(keyedBy: CodingKeys.self)
-
-      id = try container.decode(Int.self, forKey: .id)
-      name = try container.decode(String.self, forKey: .name)
-      seriesNum = try container.decode(Int.self, forKey: .seriesNum)
-      onAir = try container.decode(String.self, forKey: .onAir)
-      duration = try container.decode(Int.self, forKey: .duration)
-      country = try container.decode(String.self, forKey: .country)
-      childrenCount = try container.decode(Int.self, forKey: .childrenCount)
-      isHd = try container.decode(Bool.self, forKey: .isHd)
+      id = try decoder.decode("id")
+      name = try decoder.decode("name")
+      seriesNum = try decoder.decode("series_num")
+      onAir = try decoder.decode("on_air")
+      duration = try decoder.decode("duration")
+      country = try decoder.decode("country")
+      childrenCount = try decoder.decode("children_count")
+      isHd = try decoder.decode("is_hd")
 
       do {
-        files = (try container.decode(forKey: .files, default: []))
+        files = (try decoder.decode("files")) ?? []
       }
       catch {
         files = []
       }
 
-      channel = try container.decode(Name.self, forKey: .channel)
-      shortName = try container.decode(String.self, forKey: .shortName)
-      shortNameEng = try container.decode(String.self, forKey: .shortNameEng)
-      watchStatus = try container.decode(WatchStatus.self, forKey: .watchStatus)
-      tag = try container.decode(String.self, forKey: .tag)
+      channel = try decoder.decode("channel")
+      shortName = try decoder.decode("short_name")
+      shortNameEng = try decoder.decode("short_name_eng")
+      watchStatus = try decoder.decode("watch_status")
+      tag = try decoder.decode("tag")
 
       // bug in REST API: sometimes returns empty string
       do {
-        year = try container.decode(forKey: .year, default: 0)
+        year = (try decoder.decode("year")) ?? 0
       }
       catch {
         year = 0
       }
 
-      mediaType = try container.decode(MediaType.self, forKey: .mediaType)
-      parent = try container.decode(Int.self, forKey: .parent)
-      thumb = try container.decode(String.self, forKey: .thumb)
-      mark = try container.decode(MarkType.self, forKey: .mark)
-      rating = try container.decode(Int.self, forKey: .rating)
-      description = try container.decode(String.self, forKey: .description)
+      mediaType = try decoder.decode("type")
+      parent = try decoder.decode("parent")
+      thumb = try decoder.decode("thumb")
+      mark = try decoder.decode("mark")
+      rating = try decoder.decode("rating")
+      description = try decoder.decode("description")
     }
   }
 
@@ -179,69 +178,42 @@ extension EtvnetAPI {
   public struct LiveChannel: Codable {
     public let id: Int
     public let name: String
-////    public let liveFormat: String
-////    public let favorite: Bool
-//    public let offset: String
     public let allowed: Int
-////    public let currentShow: Show
-////    public let tvShows: [String]
     public let files: [FileType]
     public let icon: URL?
 
     enum CodingKeys: String, CodingKey {
       case id
       case name
-//      case offset
       case allowed
-////      case currentShow = "current_show"
-////      case liveFormat = "live_format"
-////      case favorite
-////      case tvShows = "tv_shows"
       case files
       case icon
     }
 
     public init(name: String, id: Int, allowed: Int, files: [FileType], icon: URL?) {
-
-    //}, offset: String, allowed: Int, files: [FileType], icon: URL?) {
       self.name = name
       self.id = id
-//      self.offset = offset
       self.allowed = allowed
-//
-//      self.liveFormat = liveFormat
-//      self.favorite = favorite
-//      self.tvShows = tvShows
-
       self.files = files
       self.icon = icon
     }
 
     public init(from decoder: Decoder) throws {
-      let container = try decoder.container(keyedBy: CodingKeys.self)
-
-      let name = try container.decode(String.self, forKey: .name)
-      let id = try container.decode(Int.self, forKey: .id)
-//      let offset = try container.decode(String.self, forKey: .offset)
-      let allowed = try container.decode(Int.self, forKey: .allowed)
-//      //let liveFormat = try container.decode(String.self, forKey: .liveFormat)
-//      //let favorite = try container.decode(Bool.self, forKey: .favorite)
-      let files = try container.decode([FileType].self, forKey: .files)
-      let icon = try container.decodeIfPresent(URL.self, forKey: .icon)
+      let name: String = try decoder.decode("name")
+      let id: Int = try decoder.decode("id")
+      let allowed: Int = try decoder.decode("allowed")
+      let files: [FileType] = try decoder.decode("files")
+      let icon: URL? = try decoder.decodeIfPresent("icon")
 
       self.init(name: name, id: id, allowed: allowed, files: files, icon: icon)
-      //, offset: offset, allowed: allowed,  files: files, icon: icon)
     }
 
     public func encode(to encoder: Encoder) throws {
-      var container = encoder.container(keyedBy: CodingKeys.self)
-
-      try container.encode(name, forKey: .name)
-      try container.encode(id, forKey: .id)
-//      try container.encode(offset, forKey: .offset)
-      try container.encode(allowed, forKey: .allowed)
-      try container.encode(files, forKey: .files)
-      try container.encode(icon, forKey: .icon)
+      try encoder.encode(name, for: "name")
+      try encoder.encode(id, for: "id")
+      try encoder.encode(allowed, for: "allowed")
+      try encoder.encode(files, for: "files")
+      try encoder.encode(icon, for: "icon")
     }
   }
 
@@ -341,20 +313,18 @@ extension EtvnetAPI {
     }
 
     public init(from decoder: Decoder) throws {
-      let container = try decoder.container(keyedBy: CodingKeys.self)
+      let errorCode = (try decoder.decode("error_code")) ?? ""
+      let errorMessage = (try decoder.decode("error_message")) ?? ""
+      let statusCode = (try decoder.decode("status_code")) ?? 0
 
-      let errorCode = try container.decode(forKey: .errorCode, default: "")
-      let errorMessage = try container.decode(forKey: .errorMessage, default: "")
-      let statusCode = try container.decode(forKey: .statusCode, default: 0)
-
-      let paginatedMedia = try? container.decodeIfPresent(PaginatedMediaData.self, forKey: .data)
-      let paginatedChildren = try? container.decodeIfPresent(PaginatedChildrenData.self, forKey: .data)
-      let paginatedBookmarks = try? container.decodeIfPresent(PaginatedBookmarksData.self, forKey: .data)
-      let genres = try? container.decodeIfPresent([Genre].self, forKey: .data)
-      let names = try? container.decodeIfPresent([Name].self, forKey: .data)
-      let liveChannels = try? container.decodeIfPresent([LiveChannel].self, forKey: .data)
-      let liveSchedules = try? container.decodeIfPresent([LiveSchedule].self, forKey: .data)
-      let url = try? container.decodeIfPresent(UrlType.self, forKey: .data)
+      let paginatedMedia: PaginatedMediaData? = try? decoder.decodeIfPresent("data")
+      let paginatedChildren: PaginatedChildrenData? = try? decoder.decodeIfPresent("data")
+      let paginatedBookmarks: PaginatedBookmarksData? = try? decoder.decodeIfPresent("data")
+      let genres: [Genre]? = try? decoder.decodeIfPresent("data")
+      let names: [Name]? = try? decoder.decodeIfPresent("data")
+      let liveChannels: [LiveChannel]? = try? decoder.decodeIfPresent("data")
+      let liveSchedules: [LiveSchedule]? = try? decoder.decodeIfPresent("data")
+      let url: UrlType? = try? decoder.decodeIfPresent("data")
 
       var data: MediaData?
 
@@ -390,13 +360,10 @@ extension EtvnetAPI {
     }
 
     public func encode(to encoder: Encoder) throws {
-      var container = encoder.container(keyedBy: CodingKeys.self)
-
-      try container.encode(errorCode, forKey: .errorCode)
-      try container.encode(errorMessage, forKey: .errorMessage)
-      try container.encode(statusCode, forKey: .statusCode)
-
-      try container.encode(data, forKey: .data)
+      try encoder.encode(errorCode, for: "error_code")
+      try encoder.encode(errorMessage, for: "error_message")
+      try encoder.encode(statusCode, for: "status_code")
+      try encoder.encode(data, for: "data")
     }
   }
 
