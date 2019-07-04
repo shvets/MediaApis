@@ -24,12 +24,18 @@ extension EtvnetApiClient {
 
   public func loadConfig() throws {
     if (configFile.exists()) {
-      try self.configFile.read()
+      if let items = (try Await.await() { handler in
+        self.configFile.read(handler)
+      }) {
+        self.configFile.items = items
+      }
     }
   }
 
   public func saveConfig() throws {
-    try self.configFile.write()
+    try Await.await() { handler in
+      self.configFile.write(handler)
+    }
   }
 }
 
@@ -92,7 +98,7 @@ extension EtvnetApiClient {
 
         if let refreshToken = refreshToken {
           if let value = try updateToken(refreshToken) {
-            self.configFile.items = value.asConfigurationItems()
+            self.configFile.items = value.asMap()
             try self.saveConfig()
           }
         }
@@ -110,7 +116,7 @@ extension EtvnetApiClient {
             if let value = try self.authClient.createToken(deviceCode: deviceCode) {
               ok = true
 
-              self.configFile.items = value.asConfigurationItems()
+              self.configFile.items = value.asMap()
               try self.saveConfig()
             }
           }
@@ -136,7 +142,7 @@ extension EtvnetApiClient {
           if done {
             result = value
 
-            self.configFile.items = value.asConfigurationItems()
+            self.configFile.items = value.asMap()
             try saveConfig()
           }
         }
@@ -193,7 +199,7 @@ extension EtvnetApiClient {
 
             if let refreshToken = refreshToken {
               if let fullValue = try self.updateToken(refreshToken) {
-                self.configFile.items = fullValue.asConfigurationItems()
+                self.configFile.items = fullValue.asMap()
                 try self.saveConfig()
 
                 result = try self.fullRequest(path: path, to: type, method: method, queryItems: queryItems, unauthorized: true)

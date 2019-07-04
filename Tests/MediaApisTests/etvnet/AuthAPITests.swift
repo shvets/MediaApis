@@ -62,9 +62,11 @@ class AuthAPITests: XCTestCase {
 
       print("Result: \(result)")
 
-      subject.apiClient.configFile.items = result.asConfigurationItems()
+      subject.apiClient.configFile.items = result.asMap()
 
-      if let _ = try self.subject.apiClient.configFile.write() {
+      if let result = (try Await.await() { handler in
+        self.subject.apiClient.configFile.write(handler)
+      }) {
         print("Config saved.")
       }
       else {

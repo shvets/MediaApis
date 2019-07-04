@@ -54,22 +54,22 @@ public struct AuthProperties: Codable, CustomStringConvertible {
     }
   }
 
-  public func asConfigurationItems() -> [String: String] {
-    var dict = [String: String]()
+  public func asMap() -> [String: String] {
+    var map = [String: String]()
 
     if let accessToken = accessToken {
-      dict["access_token"] = accessToken
+      map["access_token"] = accessToken
     }
 
     if let refreshToken = refreshToken {
-      dict["refresh_token"] = refreshToken
+      map["refresh_token"] = refreshToken
     }
 
-    if let expires = expires{
-      dict["expires"] = String(expires)
+    if let expires = expires {
+      map["expires"] = String(expires)
     }
 
-    return dict
+    return map
   }
 
   public var description: String {
