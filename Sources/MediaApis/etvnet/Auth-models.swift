@@ -54,8 +54,8 @@ public struct AuthProperties: Codable, CustomStringConvertible {
     }
   }
 
-  public func asConfigurationItems() -> ConfigurationItems<String> {
-    var dict = ConfigurationItems<String>()
+  public func asConfigurationItems() -> [String: String] {
+    var dict = [String: String]()
 
     if let accessToken = accessToken {
       dict["access_token"] = accessToken
