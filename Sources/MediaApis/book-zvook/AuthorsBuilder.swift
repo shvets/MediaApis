@@ -21,8 +21,8 @@ extension BookZvookAPI {
           data.append(Author(name: name, books: books))
         }
       }
-      else { // page without 'table' tag
-        let name = try root.select("span > span > b > span").array()[0].parent()!.select("span").text()
+      else if let parent = try root.select("span > span > b > span").array()[0].parent() { // page without 'table' tag
+        let name = try parent.select("span").text()
 
         var books: [Book] = []
 
@@ -89,8 +89,10 @@ extension BookZvookAPI {
 
       var siblings = firstSpanLink.siblingElements().array()
 
-      if nameSpan.array().count > 1 {
-        siblings = nameSpan.array()[0].parent()!.parent()!.siblingElements().array()
+      if nameSpan.array().count > 1,
+         let parent1 = nameSpan.array()[0].parent(),
+         let parent2 = parent1.parent() {
+        siblings = parent2.siblingElements().array()
       }
 
       var firstPTag = false

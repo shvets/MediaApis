@@ -359,7 +359,12 @@ open class KinoGoAPI {
         let href = try shortimg.select("div a").attr("href")
 
         let description = try shortimg.select("div div").text()
-        let thumb = try shortimg.select("img").first()!.attr("src")
+
+        var thumb = ""
+
+        if let firstImg = try shortimg.select("img").first() {
+          thumb = try firstImg.attr("src")
+        }
 
         var type = "movie"
 
@@ -449,7 +454,11 @@ open class KinoGoAPI {
                   }
                 }
                 else if let result = try? localizedData.decoded() as [Episode] {
-                  let comment = (name != nil) ? name! : ""
+                  var comment = ""
+
+                  if let name = name {
+                    comment = name
+                  }
 
                   var result2: [File] = []
 

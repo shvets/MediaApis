@@ -134,7 +134,11 @@ open class KinoTochkaAPI {
       for item: Element in items.array() {
         let href = try item.select("a[class=custom1-img]").attr("href")
         let name = try item.select("div[class=custom1-title").text()
-        let thumb = try item.select("a[class=custom1-img] img").first()!.attr("src")
+        var thumb = ""
+
+        if let first = try item.select("a[class=custom1-img] img").first() {
+          thumb = try first.attr("src") 
+        }
 
         var type = serie ? "serie" : "movie";
 
@@ -247,7 +251,11 @@ open class KinoTochkaAPI {
         let href = try item.attr("href")
         let name = try item.select("div[class=sres-text] h2").text()
         let description = try item.select("div[class=sres-desc]").text()
-        let thumb = try item.select("div[class=sres-img] img").first()!.attr("src")
+        var thumb = ""
+
+        if let first = try item.select("div[class=sres-img] img").first() {
+          thumb = try first.attr("src") 
+        }
 
         var type = "movie"
 
@@ -426,7 +434,11 @@ open class KinoTochkaAPI {
       for item: Element in items.array() {
         let href = try item.select("a[class=custom1-img]").attr("href")
         let name = try item.select("div[class=custom1-title").text()
-        let thumb = try item.select("a[class=custom1-img] img").first()!.attr("src")
+        var thumb = ""
+
+        if let first = try item.select("a[class=custom1-img] img").first() {
+          thumb = try first.attr("src") 
+        }
 
         var type = "movie"
 

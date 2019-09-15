@@ -74,8 +74,8 @@ extension KinoGoAPI {
 
         let endIndex: String.Index
 
-        if index1 != nil {
-          endIndex = index1!
+        if let index1 = index1 {
+          endIndex = index1
         }
         else {
           endIndex = text.endIndex

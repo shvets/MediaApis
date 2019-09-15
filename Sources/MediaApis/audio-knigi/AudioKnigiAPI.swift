@@ -330,8 +330,8 @@ open class AudioKnigiAPI {
   func getBookId(document: Document) throws -> Int? {
     let items = try document.select("div[class=player-side js-topic-player]")
 
-    if items.array().count > 0 {
-      let globalId = try items.first()!.attr("data-global-id")
+    if items.array().count > 0, let first = items.first() {
+      let globalId = try first.attr("data-global-id")
 
       return Int(globalId)
     }
@@ -415,11 +415,13 @@ open class AudioKnigiAPI {
     do {
       let data: Data? = try File(path: fileName).read()
 
-      do {
-        items = try data!.decoded() as [NameClassifier.ItemsGroup]
-      }
-      catch let e {
-        print("Error: \(e)")
+      if let data = data {
+        do {
+          items = try data.decoded() as [NameClassifier.ItemsGroup]
+        }
+        catch let e {
+          print("Error: \(e)")
+        }
       }
     }
     catch let e {

@@ -31,7 +31,7 @@ open class MyDownloadManager: DownloadManager {
   }
 
   public func download(clientType: ClientType, url: String) throws {
-    var bookFolder = URL(string: url)!.lastPathComponent
+    let path = URL(string: url)!.lastPathComponent
 
     switch clientType {
       case .audioKnigi:
@@ -39,38 +39,40 @@ open class MyDownloadManager: DownloadManager {
 
         let audioTracks = try client.getAudioTracks(AudioKnigiAPI.getURLPathOnly(url, baseUrl: AudioKnigiAPI.SiteUrl))
 
-        var currentAlbum: String?
+        var currentAlbum = ""
 
         for track in audioTracks {
           print(track)
 
-          if !track.albumName!.isEmpty {
-            currentAlbum = track.albumName
+          if let albumName = track.albumName, !albumName.isEmpty {
+            currentAlbum = albumName
           }
 
-          let toDir = currentAlbum == nil ? bookFolder : bookFolder + currentAlbum!
+          let toDir = path + currentAlbum
 
-          let path = track.url!.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
+          if let url = track.url,
+            let path = url.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed) {
 
-          let to = self.getDestinationFile(dir: toDir, name: "\(track.title).mp3")
+            let to = self.getDestinationFile(dir: toDir, name: "\(track.title).mp3")
 
-          if File.exists(atPath: to.path) {
-            print("\(to.path) --- exist")
-          }
-          else {
-            downloadFile(from: path, to: to)
+            if File.exists(atPath: to.path) {
+              print("\(to.path) --- exist")
+            }
+            else {
+              downloadFile(from: path, to: to)
+            }
           }
         }
 
     case .audioBoo:
-      bookFolder = String(bookFolder[...bookFolder.index(bookFolder.endIndex, offsetBy: -".html".count-1)])
-
       let client = AudioBooAPI()
 
       let playlistUrls = try client.getPlaylistUrls(url)
 
       if playlistUrls.count > 0 {
         let playlistUrl = playlistUrls[0]
+
+        let bookFolder = String(path[...path.index(path.endIndex, offsetBy: -".html".count-1)])
 
         let audioTracks = try client.getAudioTracks(playlistUrl)
 
@@ -101,9 +103,9 @@ open class MyDownloadManager: DownloadManager {
         if playlistUrls.count > 0 {
           let playlistUrl = playlistUrls[0]
 
-          let audioTracks = try client.getAudioTracks(playlistUrl)
+          let bookFolder = String(path[...path.index(path.endIndex, offsetBy: -".html".count-1)])
 
-          bookFolder = String(bookFolder[...bookFolder.index(bookFolder.endIndex, offsetBy: -".html".count-1)])
+          let audioTracks = try client.getAudioTracks(playlistUrl)
 
           for track in audioTracks {
             print(track)
