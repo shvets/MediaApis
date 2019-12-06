@@ -31,7 +31,7 @@ extension KinoTochkaAPI {
 
   public struct Episode: Codable {
     public let comment: String
-    public let file: String
+    public var file: String
 
     public var files: [String] = []
 

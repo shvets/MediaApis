@@ -62,7 +62,7 @@ open class KinoTochkaAPI {
   }
 
   public func getAllSeries(page: Int=1) throws -> BookResults {
-    let result = try getMovies("/serials/", page: page, serie: true)
+    let result = try getMovies("/seriestv/", page: page, serie: true)
 
     return BookResults(items: try sanitizeNames(result.items), pagination: result.pagination)
   }
@@ -199,18 +199,18 @@ open class KinoTochkaAPI {
         let text = try item.html()
 
         if !text.isEmpty {
-          let index1 = text.find("pl:")
+          let index1 = text.find("file:")
 
           if let startIndex = index1 {
             let text2 = String(text[startIndex ..< text.endIndex])
 
-            let index2 = text2.find("st:")
+            let index2 = text2.find(",")
 
             if let endIndex = index2 {
-              url = String(text2[text2.index(text2.startIndex, offsetBy: 4) ..< endIndex])
+              url = String(text2[text2.index(text2.startIndex, offsetBy: 6) ..< endIndex])
 
-              if url.hasSuffix("\",") {
-                let suffixIndex = url.index(url.endIndex, offsetBy: -3)
+              if url.hasSuffix("\"") {
+                let suffixIndex = url.index(url.endIndex, offsetBy: -2)
 
                 url = String(url[...suffixIndex])
               }
@@ -375,14 +375,15 @@ open class KinoTochkaAPI {
   func buildEpisodes(_ playlist: [Episode]) -> [Episode] {
     var episodes: [Episode] = []
 
-    for item in playlist {
+    for var item in playlist {
+      item.file = item.file.replacingOccurrences(of: "[480,720]", with: "720")
       let filesStr = item.file.components(separatedBy: ",")
 
       var files: [String] = []
 
-      for item in filesStr {
-        if !item.isEmpty {
-          files.append(item)
+      for item2 in filesStr {
+        if !item2.isEmpty {
+          files.append(item2)
         }
       }
 

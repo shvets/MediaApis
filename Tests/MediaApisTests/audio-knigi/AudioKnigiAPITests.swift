@@ -232,6 +232,8 @@ class AudioKnigiAPITests: XCTestCase {
     let pages = pagination.pages
 
     for page in (2...pages) {
+      print("Visiting page \(page)")
+
       let result2 = try self.subject.getAuthors(page: page)
 
       list += result2.items
@@ -245,6 +247,8 @@ class AudioKnigiAPITests: XCTestCase {
   private func generatePerformersList(_ fileName: String) throws {
     var list = [Any]()
 
+    print("Visiting page 1")
+
     let result = try subject.getPerformers()
 
     list += result.items
@@ -254,6 +258,8 @@ class AudioKnigiAPITests: XCTestCase {
     let pages = pagination.pages
 
     for page in (2...pages) {
+      print("Visiting page \(page)")
+
       let result2 = try self.subject.getPerformers(page: page)
 
       list += result2.items
