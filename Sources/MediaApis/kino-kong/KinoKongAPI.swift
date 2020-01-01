@@ -3,7 +3,7 @@ import SwiftSoup
 import SimpleHttpClient
 
 open class KinoKongAPI {
-  public static let SiteUrl = "https://kinokong.se"
+  public static let SiteUrl = "https://top.kinokong.ws"
 
   let UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36"
 
@@ -12,7 +12,7 @@ open class KinoKongAPI {
   public init() {}
   
   public static func getURLPathOnly(_ url: String, baseUrl: String) -> String {
-    return String(url[baseUrl.index(url.startIndex, offsetBy: baseUrl.count)...])
+    String(url[baseUrl.index(url.startIndex, offsetBy: baseUrl.count)...])
   }
 
   func getHeaders(_ referer: String="") -> Set<HttpHeader> {
@@ -61,27 +61,27 @@ open class KinoKongAPI {
   }
 
   public func getAllMovies(page: Int=1) throws -> BookResults {
-    return try getMovies("/film/", page: page)
+    try getMovies("/film/", page: page)
   }
 
   public func getNewMovies(page: Int=1) throws -> BookResults {
-    return try getMovies("/film/2019", page: page)
+    try getMovies("/film/2019-1", page: page)
   }
 
   public func getAllSeries(page: Int=1) throws -> BookResults {
-    return try getMovies("/series/", page: page)
+    try getMovies("/series/", page: page)
   }
 
   public func getAnimations(page: Int=1) throws -> BookResults {
-    return try getMovies("/cartoons/", page: page)
+    try getMovies("/cartoons/", page: page)
   }
 
   public func getAnime(page: Int=1) throws -> BookResults {
-    return try getMovies("/animes/", page: page)
+    try getMovies("/animes/", page: page)
   }
 
   public func getTvShows(page: Int=1) throws -> BookResults {
-    return try getMovies("/documentary/", page: page)
+    try getMovies("/documentary/", page: page)
   }
 
   public func getMovies(_ path: String, page: Int=1) throws -> BookResults {
@@ -96,9 +96,9 @@ open class KinoKongAPI {
       for item: Element in items.array() {
         var href = try item.select("div[class=item] span[class=main-sliders-bg] a").attr("href")
         let name = try item.select("h2[class=main-sliders-title] a").text()
-        let thumb = try KinoKongAPI.SiteUrl +
-          item.select("div[class=main-sliders-shadow] span[class=main-sliders-bg] ~ img").attr("src")
-
+        let last = try item.select("div[class=main-sliders-img] img").array().last!
+        let thumb = try last.attr("src")
+        
         let seasonNode = try item.select("div[class=main-sliders-shadow] div[class=main-sliders-season]").text()
 
         if href.find(KinoKongAPI.SiteUrl) != nil {
@@ -121,15 +121,15 @@ open class KinoKongAPI {
   }
 
   func getMoviesByRating(page: Int=1) throws -> BookResults {
-    return try getMoviesByCriteriaPaginated("rating", page: page)
+    try getMoviesByCriteriaPaginated("rating", page: page)
   }
 
   func getMoviesByViews(page: Int=1) throws -> BookResults {
-    return try getMoviesByCriteriaPaginated("views", page: page)
+    try getMoviesByCriteriaPaginated("views", page: page)
   }
 
   func getMoviesByComments(page: Int=1) throws -> BookResults {
-    return try getMoviesByCriteriaPaginated("comments", page: page)
+    try getMoviesByCriteriaPaginated("comments", page: page)
   }
 
   public func getMoviesByCriteriaPaginated(_ mode: String, page: Int=1, perPage: Int=25) throws -> BookResults {
@@ -216,7 +216,7 @@ open class KinoKongAPI {
   }
 
   func getSeries(_ path: String, page: Int=1) throws -> BookResults {
-    return try getMovies(path, page: page)
+    try getMovies(path, page: page)
   }
 
   public func getUrls(_ path: String) throws -> [String] {
@@ -270,27 +270,43 @@ open class KinoKongAPI {
   public func getSeriePlaylistUrl(_ path: String) throws -> String {
     var url = ""
 
-    if let document = try getDocument(path) {
-      let items = try document.select("script")
+    if let document = try getDocument(KinoKongAPI.getURLPathOnly(path, baseUrl: KinoKongAPI.SiteUrl)) {
+      let items = try document.select("iframe")
 
       for item: Element in items.array() {
-        let text = try item.html()
+        let text = try item.attr("src")
 
-        if !text.isEmpty {
-          let index1 = text.find("pl:")
-
-          if let startIndex = index1 {
-            let text2 = String(text[startIndex ..< text.endIndex])
-
-            let index2 = text2.find("\",")
-
-            if let endIndex = index2 {
-              url = String(text2[text2.index(text2.startIndex, offsetBy:4) ..< endIndex])
-
-              break
-            }
-          }
+        if !text.isEmpty  && text.starts(with: "//") {
+          url = text.replacingOccurrences(of: "//", with: "http://")
+//          print(text)
+//          let index1 = text.find("pl:")
+//
+//          if let startIndex = index1 {
+//            let text2 = String(text[startIndex ..< text.endIndex])
+//
+//            let index2 = text2.find("\",")
+//
+//            if let endIndex = index2 {
+//              url = String(text2[text2.index(text2.startIndex, offsetBy:4) ..< endIndex])
+//
+//              break
+//            }
+//          }
         }
+      }
+    }
+
+    return url
+  }
+
+  public func getSeriePosterUrl(_ path: String) throws -> String? {
+    var url: String? = nil
+
+    if let document = try getDocument(KinoKongAPI.getURLPathOnly(path, baseUrl: KinoKongAPI.SiteUrl)) {
+      let items = try document.select("div[class=full-poster] img")
+
+      if items.array().count > 0 {
+        url = try items.array().first!.attr("src")
       }
     }
 
@@ -472,51 +488,121 @@ open class KinoKongAPI {
   public func getSeasons(_ playlistUrl: String, path: String = "") throws -> [Season] {
     var list: [Season] = []
 
-    let newPath = KinoKongAPI.getURLPathOnly(playlistUrl, baseUrl: KinoKongAPI.SiteUrl)
+    if let url = URL(string: playlistUrl), let scheme = url.scheme, let host = url.host {
+      let apiClient = ApiClient(URL(string: "\(scheme)://\(host)")!)
 
-    print(newPath)
+      if let response = try apiClient.request(url.path),
+         let data = response.data,
+         let document = try data.toDocument(encoding: .windowsCP1251) {
+        let items = try document.select("input")
 
-    if let response = try apiClient.request(newPath, headers: getHeaders(KinoKongAPI.SiteUrl + "/" + newPath)),
-       let data = response.data,
-       let content = String(data: data, encoding: .windowsCP1251) {
+        for item: Element in items.array() {
+          let id = try item.attr("id")
 
-      if !content.isEmpty {
-        if let index = content.find("{\"playlist\":") {
-          let playlistContent = content[index ..< content.endIndex]
+          if id == "files" {
+            let value = try item.attr("value")
 
-          if let localizedData = playlistContent.data(using: .windowsCP1251) {
+            print(value)
 
-            if let result = try? apiClient.decode(localizedData, to: PlayList.self) {
-              for item in result.playlist {
-                list.append(Season(comment: item.comment, playlist: buildEpisodes(item.playlist)))
+            if let localizedData = value.data(using: .utf16) {
+              let jsonResponse = try JSONSerialization.jsonObject(with: localizedData, options: [])
+
+              if let result = jsonResponse as? [String: [[String: Any]]] {
+                let singleSeason = result.values.count > 0 && (result.values.first?.first?["file"] != nil)
+
+                //print(singleSeason)
+
+                if singleSeason {
+                  var episodes: [Episode] = []
+
+                  for (key, values) in result {
+                    if key == "0" {
+                      episodes.append(contentsOf: buildEpisodes(values as! [[String: String]]))
+                    }
+                  }
+
+                  let season = Season(comment: "1 сезон", playlist: episodes)
+
+                  list.append(season)
+                }
+                else {
+                  for (key, values) in result {
+                    if key == "0" {
+                      var episodes: [Episode] = []
+
+                      for value in values {
+                        let comment = value["comment"] as? String ?? ""
+
+                        if let folder = value["folder"] as? [[String: String]] {
+                          episodes = buildEpisodes(folder)
+                        }
+
+                        let season = Season(comment: comment, playlist: episodes)
+
+                        list.append(season)
+                      }
+                    }
+                  }
+                }
               }
             }
-            else if let result = try apiClient.decode(localizedData, to: SingleSeasonPlayList.self) {
-              list.append(Season(comment: "Сезон 1", playlist: buildEpisodes(result.playlist)))
-            }
+
+            break;
           }
         }
       }
     }
 
+//
+//    if let response = try apiClient.request(newPath, headers: getHeaders(KinoKongAPI.SiteUrl + "/" + newPath)),
+//       let data = response.data,
+//       let content = String(data: data, encoding: .windowsCP1251) {
+//
+//      if !content.isEmpty {
+//        if let index = content.find("{\"playlist\":") {
+//          let playlistContent = content[index ..< content.endIndex]
+//
+//          if let localizedData = playlistContent.data(using: .windowsCP1251) {
+//
+//            if let result = try? apiClient.decode(localizedData, to: PlayList.self) {
+//              for item in result.playlist {
+//                list.append(Season(comment: item.comment, playlist: buildEpisodes(item.playlist)))
+//              }
+//            }
+//            else if let result = try apiClient.decode(localizedData, to: SingleSeasonPlayList.self) {
+//              list.append(Season(comment: "Сезон 1", playlist: buildEpisodes(result.playlist)))
+//            }
+//          }
+//        }
+//      }
+//    }
+
     return list
   }
 
-  func buildEpisodes(_ playlist: [Episode]) -> [Episode] {
+  func buildEpisodes(_ playlist: [[String: String]]) -> [Episode] {
     var episodes: [Episode] = []
 
-    for item in playlist {
-      let filesStr = item.file.components(separatedBy: ",")
+//    for item in playlist {
+//      let comment = item["comment"]!
+//      let file = item["file"]!
+//
+//      var episode = Episode(comment: comment, file: file)
+//
+//      episode.files = episode.urls()
+//
+//      episodes.append(episode)
+//    }
 
-      var files: [String] = []
+    for value in playlist {
+      let comment = value["comment"] ?? ""
+      let file = value["file"] ?? ""
 
-      for item in filesStr {
-        if !item.isEmpty {
-          files.append(item)
-        }
-      }
+      var episode = Episode(comment: comment, file: file)
 
-      episodes.append(Episode(comment: item.comment, file: item.file, files: files))
+      episode.files = episode.urls()
+
+      episodes.append(episode)
     }
 
     return episodes
@@ -533,7 +619,7 @@ open class KinoKongAPI {
   }
 
   func getSoundtrackPlaylistUrl(_ path: String) throws -> String {
-    return try getSeriePlaylistUrl(path)
+    try getSeriePlaylistUrl(path)
   }
 
   public func getSoundtracks(_ playlistUrl: String, path: String = "") throws -> [Soundtrack] {

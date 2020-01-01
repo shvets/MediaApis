@@ -37,8 +37,29 @@ extension KinoKongAPI {
 
     public var name: String {
       get {
-        return comment.replacingOccurrences(of: "<br>", with: " ")
+        comment.replacingOccurrences(of: "<br>", with: " ")
       }
+    }
+
+    public func urls() -> [String] {
+      file.split(separator: ",").map {
+        let text = String($0).trim()
+        let index1 = text.find("or")
+
+        let startIndex = text.index(text.startIndex, offsetBy: 6)
+
+        let endIndex: String.Index
+
+        if let index1 = index1 {
+          endIndex = index1
+        }
+        else {
+          endIndex = text.endIndex
+        }
+
+        return String(text[startIndex ..< endIndex]).trim().replacingOccurrences(of: "]", with: "")
+          .replacingOccurrences(of: "//", with: "http://")
+      }.reversed()
     }
 
     enum CodingKeys: String, CodingKey {
@@ -53,7 +74,7 @@ extension KinoKongAPI {
 
     public var name: String {
       get {
-        return comment.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: "")
+        comment.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: "")
       }
     }
   }

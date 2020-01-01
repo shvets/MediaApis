@@ -48,7 +48,7 @@ class KinoKongAPITests: XCTestCase {
   }
 
   func testGetUrls() throws {
-    let path = "35511-malenkie-sekrety-bolshoy-kompanii-2019.html"
+    let path = "36897-zhivotnye-2019.html"
 
     let list = try subject.getUrls(path)
 
@@ -59,9 +59,17 @@ class KinoKongAPITests: XCTestCase {
   }
 
   func testGetSeriePlaylistUrl() throws {
-    let path = "/25213-rodoslovnaya-03-06-2016.html"
+    let path = KinoKongAPI.SiteUrl + "/25213-rodoslovnaya-03-06-2016.html"
 
     let url = try subject.getSeriePlaylistUrl(path)
+
+    XCTAssertNotNil(url)
+  }
+
+  func testGetSeriePosterUrl() throws {
+    let path = KinoKongAPI.SiteUrl + "/25213-rodoslovnaya-03-06-2016.html"
+
+    let url = try subject.getSeriePosterUrl(path)
 
     print(url)
 
@@ -128,8 +136,8 @@ class KinoKongAPITests: XCTestCase {
     XCTAssertEqual(pagination1!.page, 1)
   }
 
-  func _testGetMultipleSeasons() throws {
-    let path = "22926-gomorra-1-4-sezon-2019.html"
+  func testGetMultipleSeasons() throws {
+    let path = KinoKongAPI.SiteUrl + "/33793-ne-otpuskay-moyu-ruku-14-06-2019.html"
 
     let playlistUrl = try subject.getSeriePlaylistUrl(path)
 
@@ -138,13 +146,14 @@ class KinoKongAPITests: XCTestCase {
     let list = try subject.getSeasons(playlistUrl, path: path)
 
     print(try list.prettify())
+    //print(list.first!.playlist.first!.files)
 
     XCTAssertNotNil(list)
     XCTAssert(list.count > 0)
   }
 
-  func _testGetSingleSeason() throws {
-    let path = "31759-orvill-06-10-2017.html"
+  func testGetSingleSeason() throws {
+    let path = KinoKongAPI.SiteUrl + "/37142-chasy-s-kukushkoy-2019.html"
 
     let playlistUrl = try subject.getSeriePlaylistUrl(path)
 
@@ -152,7 +161,8 @@ class KinoKongAPITests: XCTestCase {
 
     let list = try subject.getSeasons(playlistUrl, path: path)
 
-    print(try list.prettify())
+   print(try list.prettify())
+    //print(list.first!.playlist.first!.files)
 
     XCTAssertNotNil(list)
     XCTAssert(list.count > 0)

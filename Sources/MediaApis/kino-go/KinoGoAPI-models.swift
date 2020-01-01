@@ -35,7 +35,7 @@ extension KinoGoAPI {
 
     public var files: [String] {
       get {
-        return file.replacingOccurrences(of: "or", with: ",")
+        file.replacingOccurrences(of: "or", with: ",")
           .split(separator: ",").map {String($0).trim().replacingOccurrences(of: " ", with: "")}
       }
     }
@@ -66,7 +66,7 @@ extension KinoGoAPI {
     public let file: String
 
     public func urls() -> [String] {
-      return file.split(separator: ",").map {
+      file.split(separator: ",").map {
         let text = String($0).trim()
         let index1 = text.find("or")
 
@@ -107,7 +107,7 @@ extension KinoGoAPI {
 
     public var name: String {
       get {
-        return comment.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: "")
+        comment.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: "")
       }
     }
   }

@@ -9,7 +9,7 @@ open class KinoTochkaAPI {
   let apiClient = ApiClient(URL(string: SiteUrl)!)
 
   public static func getURLPathOnly(_ url: String, baseUrl: String) -> String {
-    return String(url[baseUrl.index(url.startIndex, offsetBy: baseUrl.count)...])
+    String(url[baseUrl.index(url.startIndex, offsetBy: baseUrl.count)...])
   }
   
   public init() {}
@@ -343,6 +343,10 @@ open class KinoTochkaAPI {
   }
 
   public func getEpisodes(_ playlistUrl: String) throws -> [Episode] {
+    guard (!playlistUrl.isEmpty) else {
+      return []
+    }
+
     var list: [Episode] = []
 
     let newPath = KinoTochkaAPI.getURLPathOnly(playlistUrl, baseUrl: KinoTochkaAPI.SiteUrl)
