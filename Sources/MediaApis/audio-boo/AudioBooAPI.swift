@@ -12,7 +12,7 @@ open class AudioBooAPI {
   public init() {}
 
   public static func getURLPathOnly(_ url: String, baseUrl: String) -> String {
-    return String(url[baseUrl.index(url.startIndex, offsetBy: baseUrl.count)...])
+    String(url[baseUrl.index(url.startIndex, offsetBy: baseUrl.count)...])
   }
 
   func getPagePath(path: String, page: Int=1) -> String {
@@ -173,6 +173,39 @@ open class AudioBooAPI {
     return result
   }
 
+  public func getAudioTracksNew(_ url: String) throws -> [BooTrack2] {
+    var result = [BooTrack2]()
+
+    let path = AudioBooAPI.getURLPathOnly(url, baseUrl: AudioBooAPI.ArchiveUrl)
+
+    if let document = try self.getDocument(path) {
+      let scripts = try document.select("script")
+
+      for script in scripts {
+        let text = try script.html()
+
+        let index1 = text.find("file:")
+        let index2 = text.find("});")
+
+        if let index1 = index1, let index2 = index2 {
+          let index3 = text.index(index1, offsetBy: 5)
+          let index4 = text.index(index2, offsetBy: -1)
+
+          let body = String(text[index3 ... index4])
+            //.replacingOccurrences(of: " ", with: "")
+            .replacingOccurrences(of: "\n", with: "")
+
+          if let data = body.data(using: .utf8),
+             let items = try apiClient.decode(data, to: [BooTrack2].self) {
+            result = items
+          }
+        }
+      }
+    }
+
+    return result
+  }
+
   public func search(_ query: String, page: Int=1) throws -> [[String: String]] {
     var result = [[String: String]]()
 
@@ -209,6 +242,6 @@ open class AudioBooAPI {
   }
 
   func toDocument(data: Data, encoding: String.Encoding = .windowsCP1251) throws -> Document? {
-    return try data.toDocument(encoding: encoding)
+    try data.toDocument(encoding: encoding)
   }
 }

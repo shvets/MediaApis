@@ -22,6 +22,11 @@ extension AudioBooAPI {
     public let width: String
   }
 
+  public struct BooTrack2: Codable {
+    public let title: String
+    public let file: String
+  }
+
   public struct BooTrack: Codable {
     public let title: String
     public let orig: String
@@ -39,7 +44,7 @@ extension AudioBooAPI {
 
     public var url: String {
       get {
-        return "\(AudioBooAPI.ArchiveUrl)\(sources[0].file)"
+        "\(AudioBooAPI.ArchiveUrl)\(sources[0].file)"
       }
     }
 

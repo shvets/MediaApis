@@ -84,6 +84,17 @@ class AudioBooAPITests: XCTestCase {
     XCTAssert(list.count > 0)
   }
 
+  func testGetAudioTracksNew() throws {
+    let url = "http://audioboo.ru/fenezi/30862-pratchett-terri-gorodskaya-strazha-08-delo-tabak.html"
+
+    let list = try subject.getAudioTracksNew(url)
+
+    print(try list.prettify())
+
+    XCTAssertNotNil(list)
+    XCTAssert(list.count > 0)
+  }
+
   func testSearch() throws {
     let query = "пратчетт"
 

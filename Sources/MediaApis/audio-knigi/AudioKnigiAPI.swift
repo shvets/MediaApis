@@ -11,7 +11,7 @@ open class AudioKnigiAPI {
   public init() {}
 
   public static func getURLPathOnly(_ url: String, baseUrl: String) -> String {
-    return String(url[baseUrl.index(url.startIndex, offsetBy: baseUrl.count)...])
+    String(url[baseUrl.index(url.startIndex, offsetBy: baseUrl.count)...])
   }
 
   func getPagePath(path: String, page: Int=1) -> String {
@@ -42,11 +42,11 @@ open class AudioKnigiAPI {
   }
 
   public func getNewBooks(page: Int=1) throws -> BookResults {
-    return try getBooks(path: "/index/", page: page)
+    try getBooks(path: "/index/newall/", page: page)
   }
 
   public func getBestBooks(page: Int=1) throws -> BookResults {
-    return try getBooks(path: "/index/top", page: page)
+    try getBooks(path: "/index/top/", page: page)
   }
 
   public func getBooks(path: String, page: Int=1) throws -> BookResults {
@@ -84,11 +84,11 @@ open class AudioKnigiAPI {
   }
 
   public func getAuthors(page: Int=1) throws -> BookResults {
-    return try getCollection(path: "/authors/", page: page)
+    try getCollection(path: "/authors/", page: page)
   }
 
   public func getPerformers(page: Int=1) throws -> BookResults {
-    return try getCollection(path: "/performers/", page: page)
+    try getCollection(path: "/performers/", page: page)
   }
 
   func getCollection(path: String, page: Int=1) throws -> BookResults {
@@ -156,7 +156,7 @@ open class AudioKnigiAPI {
   }
 
   func getGenre(path: String, page: Int=1) throws -> BookResults {
-    return try getBooks(path: path, page: page)
+    try getBooks(path: path, page: page)
   }
 
   func extractPaginationData(document: Document, path: String, page: Int) throws -> Pagination {
