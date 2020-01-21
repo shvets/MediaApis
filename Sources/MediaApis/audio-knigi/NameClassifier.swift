@@ -19,7 +19,10 @@ open class NameClassifier {
       let id = item.id
 
       if name.count > 0 {
-        let index = name.count < 3 ? name.index(name.startIndex, offsetBy: name.count) : name.index(name.startIndex, offsetBy: 3)
+        let index = name.count < 3 ?
+          name.index(name.startIndex, offsetBy: name.count) :
+          name.index(name.startIndex, offsetBy: 3)
+
         let groupName = name[name.startIndex..<index].uppercased()
 
         if !groups.keys.contains(groupName) {

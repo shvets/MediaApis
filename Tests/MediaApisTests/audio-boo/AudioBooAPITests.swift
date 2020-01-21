@@ -27,6 +27,18 @@ class AudioBooAPITests: XCTestCase {
     XCTAssert(result.count > 0)
   }
 
+  func testGetPerformersLetters() throws {
+    let letters = try subject.getPerformersLetters()
+
+    XCTAssert(letters.count > 0)
+  }
+
+  func testGetPerformers() throws {
+    let performers = try subject.getPerformers()
+
+    XCTAssert(performers.count > 0)
+  }
+
   func testGetAllBooks() throws {
     let result = try self.subject.getAllBooks()
 

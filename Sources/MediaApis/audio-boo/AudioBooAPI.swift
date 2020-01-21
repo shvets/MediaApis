@@ -86,6 +86,68 @@ open class AudioBooAPI {
     return NameClassifier().mergeSmallGroups(newGroups)
   }
 
+  public func getPerformersLetters() throws -> [[String: String]] {
+    var letters: [[String: String]] = []
+
+    if let document = try self.getDocument("tags/") {
+      let items = try document.select("div[class=content] div[id=dle-content] h3")
+
+      for item in items.array() {
+        let name = try item.text().uppercased()
+
+        if !name.isEmpty && Int(name) == nil {
+          letters.append(["name": name, "id": name])
+        }
+      }
+    }
+
+    return letters
+  }
+
+  public func getPerformers() throws -> [NameClassifier.ItemsGroup] {
+    var groups: [String: [NameClassifier.Item]] = [:]
+
+    if let document = try self.getDocument("tags/") {
+      let items = try document.select("div[class=content] div[id=dle-content] a")
+
+      for item in items.array() {
+        let href = try item.attr("href")
+
+        let name = try item.text()
+
+        let index1 = name.startIndex
+        let index2 = name.count > 2 ? name.index(name.startIndex, offsetBy: 3) :
+          name.index(name.startIndex, offsetBy: 2)
+
+        let groupName = name[index1 ..< index2].uppercased()
+
+        if !groups.keys.contains(groupName) {
+          groups[groupName] = []
+        }
+
+        var group: [NameClassifier.Item] = []
+
+        if let subGroup = groups[groupName] {
+          for item in subGroup {
+            group.append(item)
+          }
+        }
+
+        group.append(NameClassifier.Item(id: href, name: name))
+
+        groups[groupName] = group
+      }
+    }
+
+    var newGroups: [NameClassifier.ItemsGroup] = []
+
+    for (groupName, group) in groups.sorted(by: { $0.key < $1.key}) {
+      newGroups.append(NameClassifier.ItemsGroup(key: groupName, value: group))
+    }
+
+    return NameClassifier().mergeSmallGroups(newGroups)
+  }
+
   public func getAllBooks(page: Int=1) throws -> [BookItem] {
     var result = [BookItem]()
 
