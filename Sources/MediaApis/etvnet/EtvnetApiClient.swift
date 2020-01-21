@@ -98,6 +98,7 @@ extension EtvnetApiClient {
 
         if let refreshToken = refreshToken {
           if let value = try updateToken(refreshToken) {
+            ok = true
             self.configFile.items = value.asMap()
             try self.saveConfig()
           }
