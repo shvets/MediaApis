@@ -14,8 +14,8 @@ let package = Package(
     .executable(name: "grabbook", targets: ["GrabBook"])
   ],
   dependencies: [
-    .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.0.0"),
-    .package(url: "https://github.com/JohnSundell/Files", from: "3.1.0"),
+    .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.3.0"),
+    .package(url: "https://github.com/JohnSundell/Files", from: "4.1.1"),
     .package(url: "https://github.com/JohnSundell/Codextended", from: "0.3.0"),
     .package(path: "../SimpleHttpClient")
   ],

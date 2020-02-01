@@ -200,7 +200,8 @@ class AudioKnigiAPITests: XCTestCase {
 
     //print(data2)
 
-    try FileSystem().createFile(at: "authors-in-groups.json", contents: data2)
+    let folder = try Folder(path: ".")
+    try folder.createFile(named: "authors-in-groups.json", contents: data2)
   }
 
   func _testGeneratePerformersInGroupsList() throws {
@@ -217,7 +218,8 @@ class AudioKnigiAPITests: XCTestCase {
 
     //print(data2)
 
-    try FileSystem().createFile(at: "performers-in-groups.json", contents: data2)
+    let folder = try Folder(path: ".")
+    try folder.createFile(named: "performers-in-groups.json", contents: data2)
   }
 
   private func generateAuthorsList(_ fileName: String) throws {
@@ -241,7 +243,8 @@ class AudioKnigiAPITests: XCTestCase {
 
     let filteredList = list.map {["id": ($0 as! [String: String])["id"]!, "name": ($0 as! [String: String])["name"]!] }
 
-    try FileSystem().createFile(at: fileName, contents: try asPrettifiedData(filteredList))
+    let folder = try Folder(path: ".")
+    try folder.createFile(named: fileName, contents: try asPrettifiedData(filteredList))
   }
 
   private func generatePerformersList(_ fileName: String) throws {
@@ -267,7 +270,8 @@ class AudioKnigiAPITests: XCTestCase {
 
     let filteredList = list.map {["id": ($0 as! [String: String])["id"]!, "name": ($0 as! [String: String])["name"]!] }
 
-    try FileSystem().createFile(at: fileName, contents: try asPrettifiedData(filteredList))
+    let folder = try Folder(path: ".")
+    try folder.createFile(named: fileName, contents: try asPrettifiedData(filteredList))
   }
 
   var encoder: JSONEncoder = {
