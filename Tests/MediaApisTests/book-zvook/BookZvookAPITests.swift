@@ -62,12 +62,26 @@ class BookZvookAPITests: XCTestCase {
   }
 
   func testGetAudioTracks() throws {
-    let url = "http://bookzvuk.ru/zemlekopyi-terri-pratchett-audiokniga-onlayn/"
+    let url = "http://bookzvuk.ru/izyum-iz-bulki-viktor-shenderovich-audiokniga-onlayn/"
     let playlistUrls = try subject.getPlaylistUrls(url)
 
     //print(playlistUrls)
 
     let list = try subject.getAudioTracks(playlistUrls[0])
+
+    print(try list.prettify())
+
+    XCTAssertNotNil(list)
+    XCTAssert(list.count > 0)
+  }
+
+  func testGetAudioTracks2() throws {
+    let url = "http://bookzvuk.ru/palach-evgeniy-babaryikin-audiokniga-onlayn/"
+    let playlistUrls = try subject.getPlaylistUrls(url)
+
+    //print(playlistUrls)
+
+    let list = try subject.getAudioTracks2(playlistUrls[0])
 
     print(try list.prettify())
 

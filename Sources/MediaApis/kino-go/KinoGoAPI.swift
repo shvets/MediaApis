@@ -254,15 +254,15 @@ open class KinoGoAPI {
         let text = try item.html()
 
         if !text.isEmpty {
-          let index1 = text.find("\"file\"  : ")
+          let index1 = text.find("var fmp4 = \"")
 
           if let startIndex = index1 {
             let text2 = String(text[startIndex..<text.endIndex])
 
-            let index2 = text2.find("\",")
+            let index2 = text2.find("\";")
 
             if let endIndex = index2 {
-              let text3 = text2[text.index(text2.startIndex, offsetBy: 11) ..< endIndex]
+              let text3 = text2[text.index(text2.startIndex, offsetBy: 12) ..< endIndex]
 
               let text4 = text3.trimmingCharacters(in: .whitespaces).trimmingCharacters(in: .newlines)
 

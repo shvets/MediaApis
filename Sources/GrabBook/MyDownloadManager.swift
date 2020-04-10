@@ -110,7 +110,7 @@ open class MyDownloadManager: DownloadManager {
           for track in audioTracks {
             print(track)
 
-            let path = "\(AudioBooAPI.ArchiveUrl)\(track.sources[0].file)"
+            let path = track.url //"\(AudioBooAPI.ArchiveUrl)\(track.sources[0].file)"
 
             let to = self.getDestinationFile(dir: bookFolder, name: track.orig)
 

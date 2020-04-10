@@ -81,7 +81,7 @@ extension KinoGoAPI {
           endIndex = text.endIndex
         }
 
-        return String(text[startIndex ..< endIndex]).trim()
+        return String(text[startIndex ..< endIndex]).trim().replacingOccurrences(of: "]", with: "")
       }.reversed()
     }
 

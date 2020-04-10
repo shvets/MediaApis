@@ -12,7 +12,7 @@ open class BookZvookAPI {
   public init() {}
 
   public static func getURLPathOnly(_ url: String, baseUrl: String) -> String {
-    return String(url[baseUrl.index(url.startIndex, offsetBy: baseUrl.count)...])
+    String(url[baseUrl.index(url.startIndex, offsetBy: baseUrl.count)...])
   }
 
   func getPagePath(path: String, page: Int=1) -> String {
@@ -151,10 +151,19 @@ open class BookZvookAPI {
     return result
   }
 
-  public func getAudioTracks(_ url: String) throws -> [BooTrack] {
+  public func getAudioTracks(_ playlistUrl: String) throws -> [BooTrack] {
+    if (playlistUrl.hasPrefix(BookZvookAPI.ArchiveUrl)) {
+      return try getAudioTracks1(playlistUrl)
+    }
+    else {
+      return try getAudioTracks2(playlistUrl)
+    }
+  }
+
+  public func getAudioTracks1(_ playlistUrl: String) throws -> [BooTrack] {
     var result = [BooTrack]()
 
-    let path = BookZvookAPI.getURLPathOnly(url, baseUrl: BookZvookAPI.ArchiveUrl)
+    let path = BookZvookAPI.getURLPathOnly(playlistUrl, baseUrl: BookZvookAPI.ArchiveUrl)
 
     if let response = try archiveClient.request(path), let data = response.data,
        let document = try data.toDocument() {
@@ -173,12 +182,71 @@ open class BookZvookAPI {
     return result
   }
 
+  public func getAudioTracks2(_ playlistUrl: String) throws -> [BooTrack] {
+    var result = [BooTrack]()
+
+    if let url = URL(string: playlistUrl), let scheme = url.scheme, let host = url.host {
+      let components = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+
+      if let queryItems = components.queryItems {
+        let apiClient = ApiClient(URL(string: "\(scheme)://\(host)")!)
+
+        if let response = try apiClient.request(url.path, queryItems: Set(queryItems)),
+           let data = response.data,
+           let document = try data.toDocument() {
+          let items = try document.select("script")
+
+          for item: Element in items.array() {
+            let text = try item.html()
+
+            if !text.isEmpty {
+              let index1 = text.find("\"#jp_container_1\"")
+
+              if let startIndex = index1 {
+                let text2 = String(text[startIndex..<text.endIndex])
+
+                let index2 = text2.find("swfPath:")
+
+                if let endIndex = index2 {
+                  let text3 = text2[text.index(text2.startIndex, offsetBy: 12) ..< endIndex]
+
+                  let text4 = text3.components(separatedBy: .whitespacesAndNewlines).joined(separator: " ")
+
+                  let index3 = text4.index(text4.startIndex, offsetBy: 10)
+                  let index4 = text4.index(text4.endIndex, offsetBy: -2)
+
+                  let text5 = String(text4[index3..<index4])
+
+                  let text6 = text5
+                    .replacingOccurrences(of: "title:", with: "\"title\": ")
+                    .replacingOccurrences(of: "mp3:", with: "\"mp3\": ").trim()
+
+                  let text7 = String(text6[text6.startIndex..<text6.index(text6.endIndex, offsetBy: -1)]).trim()
+
+                  let text8 = String(text7[text7.startIndex..<text7.index(text7.endIndex, offsetBy: -1)])
+                  print(text8)
+
+                  if let data = text8.data(using: .utf8),
+                     let tracks = try archiveClient.decode(data, to: [BooTrack].self) {
+                    result = tracks
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    return result
+  }
+
   public func getNewBooks(page: Int=1) throws -> BookResults {
-    return try getBooks("", page: page)
+    try getBooks("", page: page)
   }
 
   public func getGenreBooks(_ path: String, page: Int=1) throws -> BookResults {
-    return try getBooks(path, page: page)
+    try getBooks(path, page: page)
   }
 
   public func getBooks(_ path: String, page: Int=1) throws -> BookResults {

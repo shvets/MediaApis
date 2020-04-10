@@ -48,10 +48,11 @@ extension BookZvookAPI {
 
   public struct BooTrack: Codable {
     public let title: String
-    public let orig: String
-    public let image: String
+    public let orig: String = ""
+    public let image: String?
     //public let duration: String
-    public let sources: [BooSource]
+    public let sources: [BooSource]?
+    public let mp3: String?
 
     enum CodingKeys: String, CodingKey {
       case title
@@ -59,11 +60,20 @@ extension BookZvookAPI {
       case image
       //case duration
       case sources
+      case mp3
     }
 
     public var url: String {
       get {
-        return "\(AudioBooAPI.ArchiveUrl)\(sources[0].file)"
+        if let mp3 = mp3 {
+          return mp3
+        }
+        else if let sources = sources {
+          return "\(AudioBooAPI.ArchiveUrl)\(sources[0].file)"
+        }
+        else {
+          return ""
+        }
       }
     }
 
@@ -73,6 +83,22 @@ extension BookZvookAPI {
 //    }
 //  }
   }
+
+//  public struct BooTrack2: Codable {
+//    public let title: String
+//    public let mp3: String
+//
+//    enum CodingKeys: String, CodingKey {
+//      case title
+//      case mp3
+//    }
+//
+//    public var url: String {
+//      get {
+//        mp3
+//      }
+//    }
+//  }
 
   public struct Book: Codable {
     public let title: String
