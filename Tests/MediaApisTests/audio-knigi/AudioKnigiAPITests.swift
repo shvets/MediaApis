@@ -129,6 +129,8 @@ class AudioKnigiAPITests: XCTestCase {
   func testPagination() throws {
     let result1 = try subject.getNewBooks(page: 1)
 
+    // print(try result1.prettify())
+
     if let pagination1 = result1.pagination {
       XCTAssertEqual(pagination1.has_next, true)
       XCTAssertEqual(pagination1.has_previous, false)
@@ -145,7 +147,7 @@ class AudioKnigiAPITests: XCTestCase {
   }
 
   func testGetAudioTracks() throws {
-    let url = "\(AudioKnigiAPI.SiteUrl)/luchshee-yumoristicheskoe-fentezi-antologiya-chast-1"
+    let url = "\(AudioKnigiAPI.SiteUrl)/ballard-dzheyms-mest"
 
     let result = try subject.getAudioTracks(url)
 

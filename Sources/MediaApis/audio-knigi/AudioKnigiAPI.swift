@@ -4,7 +4,7 @@ import SwiftSoup
 import SimpleHttpClient
 
 open class AudioKnigiAPI {
-  public static let SiteUrl = "https://audioknigi.club"
+  public static let SiteUrl = "https://akniga.org"
 
   let apiClient = ApiClient(URL(string: SiteUrl)!)
 
@@ -42,7 +42,7 @@ open class AudioKnigiAPI {
   }
 
   public func getNewBooks(page: Int=1) throws -> BookResults {
-    try getBooks(path: "/index/newall/", page: page)
+    try getBooks(path: "/index/", page: page)
   }
 
   public func getBestBooks(page: Int=1) throws -> BookResults {
@@ -66,14 +66,14 @@ open class AudioKnigiAPI {
   func getBookItems(_ document: Document, path: String, page: Int) throws -> BookResults {
     var items = [BookItem]()
 
-    let list = try document.select("article")
+    let list = try document.select("div[class=content__main__articles--item]")
 
     for element: Element in list.array() {
-      let link = try element.select("header h3 a")
-      let name = try link.text()
+      let link = try element.select("div a")
+      let name = try element.select("h2[class=caption__article-main]").text()
       let href = try link.attr("href")
-      let thumb = try element.select("img").attr("src")
-      let description = try element.select("div[class='topic-content text']").text()
+      let thumb = try link.select("img").attr("src")
+      let description = try element.select("span[class=description__article-main]").text()
 
       items.append(["type": "book", "id": href, "name": name, "thumb": thumb, "description": description])
     }
@@ -162,45 +162,46 @@ open class AudioKnigiAPI {
   func extractPaginationData(document: Document, path: String, page: Int) throws -> Pagination {
     var pages = 1
 
-    let paginationRoot = try document.select("ul[class='pagination']")
+    let items = try document.select("div[class=paging] div[class=page__nav] a[class=page__nav--standart]")
 
-    if paginationRoot.size() > 0 {
-      let paginationBlock = paginationRoot.get(0)
+    //if paginationRoot.size() > 0 {
+      //let paginationBlock = paginationRoot.get(0)
 
-      let items = try paginationBlock.select("ul li")
+      //let items = try paginationRoot.select("a")
 
-      var lastLink = try items.get(items.size() - 1).select("a")
+      var lastLink = try items.get(items.size() - 1)
 
-      if lastLink.size() == 1 {
-        lastLink = try items.get(items.size() - 2).select("a")
+      //if lastLink.size() == 1 {
+        //lastLink = try items.get(items.size() - 2)
 
-        if try lastLink.text() == "последняя" {
-          let link = try lastLink.select("a").attr("href")
-
-          let index1 = link.find("page")
-          let index2 = link.find("?")
-
-          if let index1 = index1 {
-            let index3 = link.index(index1, offsetBy: "page".count)
-            var index4: String.Index?
-
-            if index2 == nil {
-              index4 = link.index(link.endIndex, offsetBy: -1)
-            }
-            else if let index2 = index2 {
-              index4 = link.index(index2, offsetBy: -1)
-            }
-
-            if let index4 = index4 {
-              pages = Int(link[index3..<index4])!
-            }
-          }
-        }
-        else {
-          pages = try Int(lastLink.text())!
-        }
-      }
-      else {
+//        if try lastLink.text() == "последняя" {
+//          let link = try lastLink.select("a").attr("href")
+//
+//          let index1 = link.find("page")
+//          let index2 = link.find("?")
+//
+//          if let index1 = index1 {
+//            let index3 = link.index(index1, offsetBy: "page".count)
+//            var index4: String.Index?
+//
+//            if index2 == nil {
+//              index4 = link.index(link.endIndex, offsetBy: -1)
+//            }
+//            else if let index2 = index2 {
+//              index4 = link.index(index2, offsetBy: -1)
+//            }
+//
+//            if let index4 = index4 {
+//              pages = Int(link[index3..<index4])!
+//            }
+//          }
+//        }
+//        else {
+//          pages = try Int(lastLink.text())!
+    pages = try Int(lastLink.text())!
+//        }
+      //}
+      //else {
 //        let href = try items.attr("href")
 //
 //        let pattern = path + "page"
@@ -213,8 +214,8 @@ open class AudioKnigiAPI {
 //        }
 
         //pages = href[index1+pattern.length..index2].to_i
-      }
-    }
+      //}
+    //}
 
     return Pagination(page: page, pages: pages, has_previous: page > 1, has_next: page < pages)
   }
@@ -328,10 +329,10 @@ open class AudioKnigiAPI {
   }
 
   func getBookId(document: Document) throws -> Int? {
-    let items = try document.select("div[class=player-side js-topic-player]")
+    let items = try document.select("article")
 
     if items.array().count > 0, let first = items.first() {
-      let globalId = try first.attr("data-global-id")
+      let globalId = try first.attr("data-bid")
 
       return Int(globalId)
     }

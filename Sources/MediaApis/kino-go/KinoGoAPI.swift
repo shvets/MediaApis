@@ -179,7 +179,7 @@ open class KinoGoAPI {
   }
 
   public func getMoviesByYear(year: Int, page: Int=1) throws -> BookResults {
-    return try getMovies("/tags/\(year)/", page: page)
+    try getMovies("/tags/\(year)/", page: page)
   }
 
   public func getMovies(_ path: String, page: Int=1, serie: Bool=false) throws -> BookResults {
@@ -289,7 +289,15 @@ open class KinoGoAPI {
       urls[urls.count-1] = urls[urls.count-1].replacingOccurrences(of: "480", with: "720")
     }
 
-    return urls.reversed()
+    var newUrls: [String] = []
+
+    for url in urls {
+      if !newUrls.contains(url) {
+        newUrls.append(url)
+      }
+    }
+
+    return newUrls
   }
 
 //  public func getSeasonPlaylistUrl(_ path: String) throws -> String {
