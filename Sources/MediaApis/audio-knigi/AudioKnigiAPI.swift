@@ -124,9 +124,9 @@ open class AudioKnigiAPI {
     return BookResults(items: collection, pagination: pagination)
   }
 
-  public func getGenres(page: Int=1) throws -> BookResults {
+  public func getGenres(page: Int=1) throws ->  [BookItem] {
     var collection = [BookItem]()
-    var pagination = Pagination()
+    //var pagination = Pagination()
 
     let path = getPagePath(path: "/sections/", page: page)
 
@@ -146,13 +146,11 @@ open class AudioKnigiAPI {
 
         collection.append(["type": "genre", "id": id, "name": name, "thumb": thumb])
       }
-
-      if !items.array().isEmpty {
-        pagination = try self.extractPaginationData(document: document, path: path, page: page)
-      }
     }
 
-    return BookResults(items: collection, pagination: pagination)
+    //return BookResults(items: collection, pagination: pagination)
+
+    return collection
   }
 
   func getGenre(path: String, page: Int=1) throws -> BookResults {

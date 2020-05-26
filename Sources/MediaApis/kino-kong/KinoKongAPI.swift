@@ -3,7 +3,7 @@ import SwiftSoup
 import SimpleHttpClient
 
 open class KinoKongAPI {
-  public static let SiteUrl = "https://top.kinokong.ws"
+  public static let SiteUrl = "https://kinokong.org"
 
   let UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36"
 

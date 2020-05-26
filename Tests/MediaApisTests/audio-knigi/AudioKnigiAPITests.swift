@@ -103,19 +103,19 @@ class AudioKnigiAPITests: XCTestCase {
 
     print(try result.prettify())
 
-    XCTAssert(result.items.count > 0)
+    XCTAssert(result.count > 0)
 
     let result2 = try subject.getGenres(page: 2)
 
     print(try result2.prettify())
 
-    XCTAssert(result2.items.count > 0)
+    XCTAssert(result2.count > 0)
   }
 
   func testGetGenre() throws {
     let genres = try subject.getGenres(page: 1)
 
-    if let item = genres.items.first {
+    if let item = genres.first {
       if let id = item["id"] {
         let genre = try self.subject.getGenre(path: id)
 

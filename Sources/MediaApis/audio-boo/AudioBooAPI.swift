@@ -3,7 +3,7 @@ import SwiftSoup
 import SimpleHttpClient
 
 open class AudioBooAPI {
-  public static let SiteUrl = "http://audioboo.ru"
+  public static let SiteUrl = "https://audioboo.ru"
   public static let ArchiveUrl = "https://archive.org"
 
   let apiClient = ApiClient(URL(string: SiteUrl)!)

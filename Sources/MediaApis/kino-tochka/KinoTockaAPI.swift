@@ -3,7 +3,7 @@ import SwiftSoup
 import SimpleHttpClient
 
 open class KinoTochkaAPI {
-  public static let SiteUrl = "http://kinotochka.club"
+  public static let SiteUrl = "https://kinotochka.co"
   let UserAgent = "KinoTochka User Agent"
 
   let apiClient = ApiClient(URL(string: SiteUrl)!)

@@ -86,7 +86,7 @@ class KinoTochkaAPITests: XCTestCase {
   }
 
   func testGetSeriePlaylistUrl() throws {
-    let path = "13939-papik-1-sezon-2019-8.html"
+    let path = "14938-katya-i-blek-1-sezon-2020-4.html"
 
     let url = try subject.getSeasonPlaylistUrl(path)
 
@@ -137,7 +137,7 @@ class KinoTochkaAPITests: XCTestCase {
   }
 
   func testGetEpisodes() throws {
-    let path = "13112-chastnyy-detektiv-magnum-2-sezon-2019-10.html"
+    let path = "14938-katya-i-blek-1-sezon-2020-4.html"
 
     let playlistUrl = try subject.getSeasonPlaylistUrl(path)
 
