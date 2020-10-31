@@ -37,7 +37,7 @@ extension KinoTochkaAPI {
 
     public var name: String {
       get {
-        return comment.replacingOccurrences(of: "<br>", with: " ")
+        comment.replacingOccurrences(of: "<br>", with: " ")
       }
     }
 
@@ -53,7 +53,7 @@ extension KinoTochkaAPI {
 
     public var name: String {
       get {
-        return comment.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: "")
+        comment.replacingOccurrences(of: "<b>", with: "").replacingOccurrences(of: "</b>", with: "")
       }
     }
   }

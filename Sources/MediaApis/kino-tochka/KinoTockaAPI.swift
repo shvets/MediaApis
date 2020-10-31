@@ -54,15 +54,15 @@ open class KinoTochkaAPI {
   }
 
   public func getAllMovies(page: Int=1) throws -> BookResults {
-    return try getMovies("/allfilms/", page: page)
+    try getMovies("/allfilms/", page: page)
   }
 
   public func getNewMovies(page: Int=1) throws -> BookResults {
-    return try getMovies("/new/", page: page)
+    try getMovies("/premier/", page: page)
   }
 
   public func getAllSeries(page: Int=1) throws -> BookResults {
-    let result = try getMovies("/alltvseries/", page: page, serie: true)
+    let result = try getMovies("/series/", page: page, serie: true)
 
     return BookResults(items: try sanitizeNames(result.items), pagination: result.pagination)
   }
@@ -89,19 +89,19 @@ open class KinoTochkaAPI {
   }
 
   public func getAllAnimations(page: Int=1) throws -> BookResults {
-    return try getMovies("/cartoon/", page: page)
+    try getMovies("/cartoon/", page: page)
   }
 
   public func getRussianAnimations(page: Int=1) throws -> BookResults {
-    return try getMovies("/cartoon/otechmult/", page: page)
+    try getMovies("/cartoon/otechmult/", page: page)
   }
 
   public func getForeignAnimations(page: Int=1) throws -> BookResults {
-    return try getMovies("/cartoon/zarubezmult/", page: page)
+    try getMovies("/cartoon/zarubezmult/", page: page)
   }
 
   public func getAnime(page: Int=1) throws -> BookResults {
-    return try getMovies("/anime/", page: page)
+    try getMovies("/anime/", page: page)
   }
 
   public func getTvShows(page: Int=1) throws -> BookResults {
@@ -398,7 +398,7 @@ open class KinoTochkaAPI {
   }
 
   public func buildEpisode(comment: String, files: [String]) -> Episode {
-    return Episode(comment: comment, file: "file", files: files)
+    Episode(comment: comment, file: "file", files: files)
   }
 
   public func getCollections() throws -> [BookItem] {

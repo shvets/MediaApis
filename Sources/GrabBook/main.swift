@@ -5,7 +5,7 @@ class GrabBook {
   let downloadManager = MyDownloadManager()
 
   func parseCommandLine() -> Bool {
-    return CommandLine.argc > 1
+    CommandLine.argc > 1
   }
 
   func grabAudioKnigi(_ url: String) throws {

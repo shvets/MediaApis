@@ -6,7 +6,7 @@ import SimpleHttpClient
 
 class AuthAPITests: XCTestCase {
   static func getProjectDirectory() -> String {
-    return String(URL(fileURLWithPath: #file).pathComponents
+    String(URL(fileURLWithPath: #file).pathComponents
       .prefix(while: { $0 != "Tests" }).joined(separator: "/").dropFirst());
   }
 

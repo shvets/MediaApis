@@ -160,12 +160,12 @@ extension EtvnetApiClient {
   }
 
   func updateToken(_ refreshToken: String) throws -> AuthProperties? {
-    return try self.authClient.updateToken(refreshToken: refreshToken)
+    try self.authClient.updateToken(refreshToken: refreshToken)
   }
 
   func checkAccessData(_ key: String) -> Bool {
-    return (configFile.items[key] != nil) && (configFile.items["expires"] != nil) &&
-      configFile.items["expires"]! >= String(Int(Date().timeIntervalSince1970))
+    (configFile.items[key] != nil) && (configFile.items["expires"] != nil) &&
+        configFile.items["expires"]! >= String(Int(Date().timeIntervalSince1970))
   }
 }
 

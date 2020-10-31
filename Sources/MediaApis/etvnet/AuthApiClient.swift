@@ -19,7 +19,7 @@ open class AuthApiClient: ApiClient {
   ].joined(separator: " ")
 
   public func getActivationUrl() -> String {
-    return "\(baseURL)device/usercode"
+    "\(baseURL)device/usercode"
   }
   
   func getActivationCodes(includeClientSecret: Bool = true, includeClientId: Bool = true) throws ->

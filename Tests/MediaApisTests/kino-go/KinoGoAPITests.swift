@@ -129,7 +129,7 @@ class KinoGoAPITests: XCTestCase {
   }
 
   func testGetUrls() throws {
-    let url = "\(KinoGoAPI.SiteUrl)/11410-velikiy-uravnitel-2_2018____04-11.html"
+    let url = "\(KinoGoAPI.SiteUrl)/28202-territoriya-1-sezon.html"
 
     let list = try subject.getUrls(url)
 

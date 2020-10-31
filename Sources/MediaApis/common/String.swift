@@ -2,11 +2,11 @@ import Foundation
 
 extension String {
   public func find(_ sub: String) -> String.Index? {
-    return self.range(of: sub)?.lowerBound
+    self.range(of: sub)?.lowerBound
   }
 
   public func trim() -> String {
-    return self.trimmingCharacters(in: .whitespaces)
+    self.trimmingCharacters(in: .whitespaces)
   }
 
   public func addingPercentEncoding(withAllowedCharacters characterSet: CharacterSet, using encoding: String.Encoding) -> String {

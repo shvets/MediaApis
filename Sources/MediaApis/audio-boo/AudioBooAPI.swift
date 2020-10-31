@@ -159,9 +159,15 @@ open class AudioBooAPI {
       for item: Element in items.array() {
         let name = try item.select("div[class=biography-title] h2 a").text()
         let href = try item.select("div div[class=biography-image] a").attr("href")
-        let thumb = try item.select("div div[class=biography-image] a img").attr("src")
+        var thumb = try item.select("div div[class=biography-image] a img").attr("src")
 
-        result.append(["type": "book", "id": href, "name": name, "thumb": AudioBooAPI.SiteUrl + thumb])
+        let index = thumb.find("https://")
+
+        if index != thumb.startIndex {
+          thumb =  AudioBooAPI.SiteUrl + thumb
+        }
+
+        result.append(["type": "book", "id": href, "name": name, "thumb": thumb])
       }
     }
 
@@ -183,10 +189,11 @@ open class AudioBooAPI {
         let href = try item.select("div div[class=biography-image] a").attr("href")
         let thumb = try item.select("div div[class=biography-image] a img").attr("src")
 
+        let content = try item.select("div[class=biography-content]").text()
+
         let elements = try item.select("div[class=biography-content] div").array()
 
-        let content = try elements[0].text()
-        let rating = try elements[2].select("div[class=rating] ul li[class=current-rating]").text()
+        let rating = try elements[0].select("div[class=rating] ul li[class=current-rating]").text()
 
         result.append(["type": "book", "id": href, "name": name, "thumb": AudioBooAPI.SiteUrl + thumb, 
                        "content": content, "rating": rating])

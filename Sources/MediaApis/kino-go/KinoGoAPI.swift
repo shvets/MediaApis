@@ -10,7 +10,7 @@ open class KinoGoAPI {
   let apiClient = ApiClient(URL(string: SiteUrl)!)
 
   public static func getURLPathOnly(_ url: String, baseUrl: String) -> String {
-    return String(url[baseUrl.index(url.startIndex, offsetBy: baseUrl.count)...])
+    String(url[baseUrl.index(url.startIndex, offsetBy: baseUrl.count)...])
   }
 
   public init() {}
@@ -71,15 +71,15 @@ open class KinoGoAPI {
   }
 
   public func getCategoriesByCountry() throws -> [[String: String]] {
-    return try getAllCategories()["По странам"]!
+    try getAllCategories()["По странам"]!
   }
 
   public func getCategoriesByYear() throws -> [[String: String]] {
-    return try getAllCategories()["По году"]!
+    try getAllCategories()["По году"]!
   }
 
   public func getCategoriesBySerie() throws -> [[String: String]] {
-    return try getAllCategories()["Сериалы"]!
+    try getAllCategories()["Сериалы"]!
   }
 
   public func getAllCategories() throws -> [String: [[String: String]]] {
@@ -115,15 +115,15 @@ open class KinoGoAPI {
   }
 
   public func getAllMovies(page: Int=1) throws -> BookResults {
-    return try getMovies("/", page: page)
+    try getMovies("/", page: page)
   }
 
   public func getPremierMovies(page: Int=1) throws -> BookResults {
-    return try getMovies("/film/premiere/", page: page)
+    try getMovies("/film/premiere/", page: page)
   }
 
   public func getLastMovies(page: Int=1) throws -> BookResults {
-    return try getMovies("/film/", page: page)
+    try getMovies("/film/", page: page)
   }
 
   public func getAllSeries(page: Int=1) throws ->BookResults {
@@ -153,11 +153,11 @@ open class KinoGoAPI {
   }
 
   public func getAnimations(page: Int=1) throws -> BookResults {
-    return try getMovies("/mult/", page: page)
+    try getMovies("/mult/", page: page)
   }
 
   public func getAnime(page: Int=1) throws -> BookResults {
-    return try getMovies("/anime/", page: page)
+    try getMovies("/anime/", page: page)
   }
 
   public func getTvShows(page: Int=1) throws -> BookResults {
@@ -266,9 +266,10 @@ open class KinoGoAPI {
 
               let text4 = text3.trimmingCharacters(in: .whitespaces).trimmingCharacters(in: .newlines)
 
-              let text5 = String(text4[text4.startIndex ..< text4.index(text4.endIndex, offsetBy: -2)])
+              //let text5 = String(text4[text4.startIndex ..< text4.index(text4.endIndex, offsetBy: -2)])
 
-              urls = File(comment: "", file: text5).urls()
+              urls = [text4]
+                      //File(comment: "", file: text4).urls()
 
               break
             }

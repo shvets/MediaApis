@@ -61,11 +61,11 @@ open class KinoKongAPI {
   }
 
   public func getAllMovies(page: Int=1) throws -> BookResults {
-    try getMovies("/film/", page: page)
+    try getMovies("/filmy/", page: page)
   }
 
   public func getNewMovies(page: Int=1) throws -> BookResults {
-    try getMovies("/film/2019-1", page: page)
+    try getMovies("/filmy/novinki-2020-godes", page: page)
   }
 
   public func getAllSeries(page: Int=1) throws -> BookResults {
@@ -222,49 +222,110 @@ open class KinoKongAPI {
   public func getUrls(_ path: String) throws -> [String] {
     var urls: [String] = []
 
+    var newPath: String? = nil
+
     if let document = try getDocument(path) {
-      let items = try document.select("script")
+      let items = try document.select("iframe")
 
       for item: Element in items.array() {
-        let text0 = try item.html()
-        let text = text0.replacingOccurrences(of: ",file:", with: ", file:")
+        let text = try item.attr("src")
 
-        if !text.isEmpty {
-          let index1 = text.find("\", file:\"")
-          let index2 = text.find("\"});")
+        if !text.isEmpty, text.find("/iframe") != nil {
+          let index1 = text.find(".pw/")
 
-          if let startIndex = index1, let endIndex = index2 {
-            urls = text[text.index(startIndex, offsetBy: 8) ..< endIndex].components(separatedBy: ",")
+          if let index1 = index1 {
+            let index2 = text.index(index1, offsetBy: 3)
 
-            break
+            newPath = String(text[index2 ..< text.endIndex])
           }
-          else {
-            let index1 = text.find("\", file:\"")
-            let index2 = text.find("\",st:")
+        }
+      }
+    }
 
-            if let startIndex = index1, let endIndex = index2 {
-              urls = text[text.index(startIndex, offsetBy: 8) ..< endIndex].components(separatedBy: ",")
+    if let newPath = newPath {
+      let apiClient = ApiClient(URL(string: "https://vid1603659014294.vb17120ayeshajenkins.pw")!)
 
-              break
+      var headers: Set<HttpHeader> = []
+      headers.insert(HttpHeader(field: "referer", value: " https://kinokong.org/"))
+
+      if let response = try apiClient.request(newPath, headers: headers), let data = response.data {
+        let document = try data.toDocument(encoding: .windowsCP1251)
+
+        if let document = document {
+          let items = try document.select("div")
+
+          for item: Element in items.array() {
+            let id = try item.attr("id")
+
+            if id == "nativeplayer" {
+              let dataConfig = try item.attr("data-config")
+
+              if dataConfig == dataConfig {
+                // "{\"ads\":{\"ads\":{\"midroll\":[{\"time\":\"firstQuartile\",\"url\":\"https:\\/\\/aj1907.online\\/zD4or91Q1-VnpIM_oLUqwh5HsfEWEAVmZPF8UopM59PCI-CURAzt7r12Bibpz8aGcs7uefk8p9a4pdXuaKaJo5P7E6e2uuUE#mid35-19\"},{\"time\":\"1\",\"url\":\"https:\\/\\/aj1907.online\\/zD4or91Q1-VnpIM_oLUqwh5HsfEWEAVmZPF8UopM59PCI-CURAzt7r12Bibpz8aGcs7uefk8p9a4pdXuaKaJo5P7E6e2uuUE#mid35-19\"}],\"preroll\":\"https:\\/\\/aj1907.online\\/z4IiVVrfmpT0vTF2FxwSDJi4aFnFAGgnvLeQS6GCqxsd7lJM55zsf-OBwCnE35pjPGM_o-1UDvYQYZ4thZNB7L_EUhb0uZ2o#pre35-20\"}},\"poster\":\"\",\"type\":\"movie\",\"subtitle\":[],\"volume_control_mouse\":0,\"href\":null,\"token\":\"4dcfffbeaaa7e83966d4403138d34803\",\"hls\":\"\\/\\/cdn-400.vb17120ayeshajenkins.pw\\/stream2\\/cdn-400\\/fb144bf917094bac73c6be2f5c6eb536\\/MJTMsp1RshGTygnMNRUR2N2MSlnWXZEdMNDZzQWe5MDZzMmdZJTO1R2RWVHZDljekhkSsl1VwYnWtx2cihVT25UbFhXW6JlaNpXQ41kenhnWER2aOp2ZyoFRVlXTHVlMPRFZqplaZRjTtVUP:1603667407:73.194.0.48:a459fb4399846955957655adc140c08498b2bb098fcbb98da56d9cb635869346\\/index.m3u8\",\"end_tag_banner_show_time\":60,\"end_tag_banner_skip_time\":15,\"endTag\":\"528"...
+
+                let index1 = dataConfig.find("\"hls\":\"")
+                let index2 = dataConfig.find(".m3u8\"")
+
+                if let index1 = index1, let index2 = index2 {
+                  let index3 = dataConfig.index(index1, offsetBy: 7)
+
+                  let url = (dataConfig[index3 ..< index2] + ".m3u8")
+                      .replacingOccurrences(of: "\\/", with: "/")
+                      .replacingOccurrences(of: "//", with: "http://")
+
+                  urls.append(url)
+                }
+              }
             }
           }
         }
       }
     }
 
-    var newUrls: [String] = []
+//      let items = try document.select("script")
+//
+//      for item: Element in items.array() {
+//        let text0 = try item.html()
+//        let text = text0.replacingOccurrences(of: ",file:", with: ", file:")
+//
+//        if !text.isEmpty {
+//          let index1 = text.find("\", file:\"")
+//          let index2 = text.find("\"});")
+//
+//          if let startIndex = index1, let endIndex = index2 {
+//            urls = text[text.index(startIndex, offsetBy: 8) ..< endIndex].components(separatedBy: ",")
+//
+//            break
+//          }
+//          else {
+//            let index1 = text.find("\", file:\"")
+//            let index2 = text.find("\",st:")
+//
+//            if let startIndex = index1, let endIndex = index2 {
+//              urls = text[text.index(startIndex, offsetBy: 8) ..< endIndex].components(separatedBy: ",")
+//
+//              break
+//            }
+//          }
+//        }
+//      }
+//    }
 
-    for url in urls {
-      if !url.hasPrefix("cuid:") {
-        let newUrl = url.replacingOccurrences(of: "\"", with: "")
-            .replacingOccurrences(of: "[720]", with: "")
-            .replacingOccurrences(of: "[480]", with: "")
+//    var newUrls: [String] = []
+//
+//    for url in urls {
+//      if !url.hasPrefix("cuid:") {
+//        let newUrl = url.replacingOccurrences(of: "\"", with: "")
+//            .replacingOccurrences(of: "[720]", with: "")
+//            .replacingOccurrences(of: "[480]", with: "")
+//
+//          newUrls.append(newUrl)
+//      }
+//    }
+//
+//    return newUrls.reversed()
 
-          newUrls.append(newUrl)
-      }
-    }
-
-    return newUrls.reversed()
+    return urls
   }
 
   public func getSeriePlaylistUrl(_ path: String) throws -> String {

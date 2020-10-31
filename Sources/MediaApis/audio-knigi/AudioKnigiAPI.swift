@@ -167,7 +167,13 @@ open class AudioKnigiAPI {
 
       //let items = try paginationRoot.select("a")
 
-      var lastLink = try items.get(items.size() - 1)
+    if items.count > 0 {
+      let lastLink = items.get(items.size() - 1)
+      pages = try Int(lastLink.text())!
+    }
+    else {
+      pages = 1
+    }
 
       //if lastLink.size() == 1 {
         //lastLink = try items.get(items.size() - 2)
@@ -196,7 +202,7 @@ open class AudioKnigiAPI {
 //        }
 //        else {
 //          pages = try Int(lastLink.text())!
-    pages = try Int(lastLink.text())!
+//    pages = try Int(lastLink.text())!
 //        }
       //}
       //else {

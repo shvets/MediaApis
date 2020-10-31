@@ -246,7 +246,7 @@ open class EtvnetAPI {
   public func getLiveChannelUrl(_ channelId: Int, format: String="mp4", mediaProtocol: String="hls",
                                 bitrate: String? = nil, otherServer: String? = nil,
                                 offset: String? = nil) throws -> [String: String] {
-    return try getUrl(0, format: format, mediaProtocol: mediaProtocol, bitrate: bitrate, otherServer: otherServer,
+    try getUrl(0, format: format, mediaProtocol: mediaProtocol, bitrate: bitrate, otherServer: otherServer,
       offset: offset, live: true, channelId: channelId, preview: false)
   }
 

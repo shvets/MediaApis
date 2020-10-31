@@ -27,7 +27,7 @@ public struct ActivationCodesProperties: Codable, CustomStringConvertible {
   }
 
   public var description: String {
-    return "ActivationCodesProperties(\(deviceCode ?? ""), \(userCode ?? ""))"
+    "ActivationCodesProperties(\(deviceCode ?? ""), \(userCode ?? ""))"
   }
 }
 
@@ -73,6 +73,6 @@ public struct AuthProperties: Codable, CustomStringConvertible {
   }
 
   public var description: String {
-    return "AuthProperties(\(accessToken ?? ""), \(refreshToken ?? ""), \(expiresIn ?? 0), \(expires ?? 0))"
+    "AuthProperties(\(accessToken ?? ""), \(refreshToken ?? ""), \(expiresIn ?? 0), \(expires ?? 0))"
   }
 }

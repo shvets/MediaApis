@@ -125,6 +125,24 @@ class KinoTochkaAPITests: XCTestCase {
     XCTAssertEqual(pagination2!.page, 2)
   }
 
+  func testPaginationInAllSeries() throws {
+    let result1 = try subject.getAllSeries(page: 1)
+
+    let pagination1 = result1.pagination
+
+    XCTAssertTrue(pagination1!.has_next)
+    XCTAssertFalse(pagination1!.has_previous)
+    XCTAssertEqual(pagination1!.page, 1)
+
+    let result2 = try subject.getAllSeries(page: 2)
+
+    let pagination2 = result2.pagination
+
+    XCTAssertTrue(pagination2!.has_next)
+    XCTAssertTrue(pagination2!.has_previous)
+    XCTAssertEqual(pagination2!.page, 2)
+  }
+
   func testGetSeasons() throws {
     let path = "/6914-byvaet-i-huzhe-2-sezon-2010.html"
 
