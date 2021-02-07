@@ -28,7 +28,7 @@ open class AudioKnigiAPI {
 
     let path = "/authors/"
 
-    if let document = try self.getDocument(path) {
+    if let document = try getDocument(path) {
       let items = try document.select("ul[id='author-prefix-filter'] li a")
 
       for item in items.array() {
@@ -45,19 +45,25 @@ open class AudioKnigiAPI {
     try getBooks(path: "/index/", page: page)
   }
 
-  public func getBestBooks(page: Int=1) throws -> BookResults {
-    try getBooks(path: "/index/top/", page: page)
+  public func getBestBooks(page: Int=1, period: String?) throws -> BookResults {
+    try getBooks(path: "/index/top/", page: page, period: period)
   }
 
-  public func getBooks(path: String, page: Int=1) throws -> BookResults {
+  public func getBooks(path: String, page: Int=1, period: String? = nil) throws -> BookResults {
     var result = BookResults()
 
     //let encodedPath = path.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!
 
     let pagePath = getPagePath(path: path, page: page)
 
-    if let document = try self.getDocument(pagePath) {
-      result = try self.getBookItems(document, path: path, page: page)
+    var queryItems: Set<URLQueryItem> = []
+
+    if let period = period {
+      queryItems.insert(URLQueryItem(name: "period", value: period))
+    }
+
+    if let document = try getDocument(pagePath, queryItems: queryItems) {
+      result = try getBookItems(document, path: path, page: page)
     }
 
     return result
@@ -97,7 +103,7 @@ open class AudioKnigiAPI {
 
     let pagePath = getPagePath(path: path, page: page)
 
-    if let document = try self.getDocument(pagePath) {
+    if let document = try getDocument(pagePath) {
       let items = try document.select("td[class=cell-name]")
 
       for item: Element in items.array() {
@@ -117,7 +123,7 @@ open class AudioKnigiAPI {
       }
 
       if !items.array().isEmpty {
-        pagination = try self.extractPaginationData(document: document, path: path, page: page)
+        pagination = try extractPaginationData(document: document, path: path, page: page)
       }
     }
 
@@ -130,7 +136,7 @@ open class AudioKnigiAPI {
 
     let path = getPagePath(path: "/sections/", page: page)
 
-    if let document = try self.getDocument(path) {
+    if let document = try getDocument(path) {
       let items = try document.select("td[class=cell-name]")
 
       for item: Element in items.array() {
@@ -237,7 +243,7 @@ open class AudioKnigiAPI {
     if let response = try apiClient.request(path, queryItems: queryItems),
        let data = response.data,
        let document = try data.toDocument() {
-      result = try self.getBookItems(document, path: path, page: page)
+      result = try getBookItems(document, path: path, page: page)
     }
 
     return result
@@ -255,13 +261,13 @@ open class AudioKnigiAPI {
     if let securityLsKey = securityLsKey, let response = response,
        let data = response.data,
        let document = try data.toDocument() {
-      if let bookId = try self.getBookId(document: document) {
-        let securityParams = self.getSecurityParams(bid: bookId, securityLsKey: securityLsKey)
+      if let bookId = try getBookId(document: document) {
+        let securityParams = getSecurityParams(bid: bookId, securityLsKey: securityLsKey)
 
         let newPath = "ajax/bid/\(bookId)"
 
         if let cookie = cookie {
-          newTracks = try self.requestTracks(path: newPath, content: securityParams, cookie: cookie)
+          newTracks = try requestTracks(path: newPath, content: securityParams, cookie: cookie)
         }
       }
     }
@@ -302,7 +308,7 @@ open class AudioKnigiAPI {
       for script in scripts {
         let text = try script.html()
 
-        if let key = try self.getSecurityLsKey(text: text) {
+        if let key = try getSecurityLsKey(text: text) {
           securityLsKey = key
         }
       }
@@ -353,7 +359,7 @@ open class AudioKnigiAPI {
 
     let matches = regex.matches(in: text, options: [], range: NSRange(location: 0, length: text.count))
 
-    let match = self.getMatched(text, matches: matches, index: 1)
+    let match = getMatched(text, matches: matches, index: 1)
 
     if let match = match, !match.isEmpty {
       if let index = match.find("'") {
@@ -436,10 +442,10 @@ open class AudioKnigiAPI {
     return items
   }
 
-  public func getDocument(_ path: String = "") throws -> Document? {
+  public func getDocument(_ path: String = "", queryItems: Set<URLQueryItem> = []) throws -> Document? {
     var document: Document? = nil
 
-    if let response = try apiClient.request(path), let data = response.data {
+    if let response = try apiClient.request(path, queryItems: queryItems), let data = response.data {
       document = try data.toDocument()
     }
 
