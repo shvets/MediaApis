@@ -97,7 +97,7 @@ class AudioBooAPITests: XCTestCase {
   }
 
   func testGetAudioTracksNew() throws {
-    let url = "http://audioboo.ru/fenezi/30862-pratchett-terri-gorodskaya-strazha-08-delo-tabak.html"
+    let url = "http://audioboo.ru/didiktiva/37963-gelbreyt-robert-kormoran-strayk-051-durnaya-krov-kniga-1.html"
 
     let list = try subject.getAudioTracksNew(url)
 

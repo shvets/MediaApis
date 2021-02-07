@@ -37,7 +37,7 @@ open class MyDownloadManager: DownloadManager {
       case .audioKnigi:
         let client = AudioKnigiAPI()
 
-        let audioTracks = try client.getAudioTracks(AudioKnigiAPI.getURLPathOnly(url, baseUrl: AudioKnigiAPI.SiteUrl))
+        let audioTracks = try client.getAudioTracks(url)
 
         var currentAlbum = ""
 

@@ -147,7 +147,7 @@ class AudioKnigiAPITests: XCTestCase {
   }
 
   func testGetAudioTracks() throws {
-    let url = "\(AudioKnigiAPI.SiteUrl)/ballard-dzheyms-mest"
+    let url = "\(AudioKnigiAPI.SiteUrl)/pratchett-terri-volnyy-narodec"
 
     let result = try subject.getAudioTracks(url)
 
