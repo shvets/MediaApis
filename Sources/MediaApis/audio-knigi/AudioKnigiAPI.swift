@@ -45,7 +45,7 @@ open class AudioKnigiAPI {
     try getBooks(path: "/index/", page: page)
   }
 
-  public func getBestBooks(page: Int=1, period: String?) throws -> BookResults {
+  public func getBestBooks(page: Int=1, period: String? = nil) throws -> BookResults {
     try getBooks(path: "/index/top/", page: page, period: period)
   }
 

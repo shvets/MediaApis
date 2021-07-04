@@ -4,7 +4,9 @@ import SwiftSoup
 import SimpleHttpClient
 
 open class KinoGoAPI {
-  public static let SiteUrl = "https://kinogo.by"
+  //public static let SiteUrl = "https://kinogoo.by"
+  public static let SiteUrl = "https://kinogo.zone"
+  
   let UserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36"
 
   let apiClient = ApiClient(URL(string: SiteUrl)!)
@@ -30,7 +32,7 @@ open class KinoGoAPI {
     var document: Document? = nil
 
     if let response = try apiClient.request(path), let data = response.data {
-      document = try data.toDocument(encoding: .windowsCP1251)
+      document = try data.toDocument(encoding: .utf8)
     }
 
     return document
@@ -127,7 +129,7 @@ open class KinoGoAPI {
   }
 
   public func getAllSeries(page: Int=1) throws ->BookResults {
-    let result = try getMovies("/serial/", page: page, serie: true)
+    let result = try getMovies("/zarubezhnye_serialy/", page: page, serie: true)
 
     return BookResults(items: try sanitizeNames(result.items), pagination: result.pagination)
   }

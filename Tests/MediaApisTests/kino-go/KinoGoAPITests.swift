@@ -12,7 +12,7 @@ class KinoGoAPITests: XCTestCase {
   }
 
   func testGetCookie() throws {
-    if let result = try subject.getCookie(url: "https://kinogo.by/11361-venom_2018_08-10.html") {
+    if let result = try subject.getCookie(url: KinoGoAPI.SiteUrl +  "/11361-venom_2018_08-10.html") {
       print(result)
 
       XCTAssertNotNil(result)
@@ -81,14 +81,14 @@ class KinoGoAPITests: XCTestCase {
     XCTAssert(list.items.count > 0)
   }
 
-  func testGetAnimations() throws {
-    let list = try subject.getAnimations()
-
-    print(try list.prettify())
-
-    XCTAssertNotNil(list)
-    XCTAssert(list.items.count > 0)
-  }
+//  func testGetAnimations() throws {
+//    let list = try subject.getAnimations()
+//
+//    print(try list.prettify())
+//
+//    XCTAssertNotNil(list)
+//    XCTAssert(list.items.count > 0)
+//  }
 
   func testGetAnime() throws {
     let list = try subject.getAnime()
@@ -108,28 +108,28 @@ class KinoGoAPITests: XCTestCase {
     XCTAssert(list.items.count > 0)
   }
 
-  func testGetMoviesByCountry() throws {
-    //print("Франция".addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)
-    let list = try subject.getMoviesByCountry(country: "/tags/Франция/")
-    //https://kinogo.by/tags/%D0%A4%D1%80%D0%B0%D0%BD%D1%86%D0%B8%D1%8F/
+//  func testGetMoviesByCountry() throws {
+//    //print("Франция".addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)!)
+//    let list = try subject.getMoviesByCountry(country: "/tags/Франция/")
+//    //https://kinogo.by/tags/%D0%A4%D1%80%D0%B0%D0%BD%D1%86%D0%B8%D1%8F/
+//
+//    print(try list.prettify())
+//
+//    XCTAssertNotNil(list)
+//    XCTAssert(list.items.count > 0)
+//  }
 
-    print(try list.prettify())
-
-    XCTAssertNotNil(list)
-    XCTAssert(list.items.count > 0)
-  }
-
-  func testGetMoviesByYear() throws {
-    let list = try subject.getMoviesByYear(year: 2008)
-
-    print(try list.prettify())
-
-    XCTAssertNotNil(list)
-    XCTAssert(list.items.count > 0)
-  }
+//  func testGetMoviesByYear() throws {
+//    let list = try subject.getMoviesByYear(year: 2008)
+//
+//    print(try list.prettify())
+//
+//    XCTAssertNotNil(list)
+//    XCTAssert(list.items.count > 0)
+//  }
 
   func testGetUrls() throws {
-    let url = "\(KinoGoAPI.SiteUrl)/28202-territoriya-1-sezon.html"
+    let url = "\(KinoGoAPI.SiteUrl)/drama/8701-klarissa-2021-smotret-onlajn-besplatno.html"
 
     let list = try subject.getUrls(url)
 

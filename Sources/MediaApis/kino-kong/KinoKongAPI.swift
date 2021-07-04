@@ -61,15 +61,15 @@ open class KinoKongAPI {
   }
 
   public func getAllMovies(page: Int=1) throws -> BookResults {
-    try getMovies("/filmy/", page: page)
+    try getMovies("/filmes/", page: page)
   }
 
   public func getNewMovies(page: Int=1) throws -> BookResults {
-    try getMovies("/filmy/novinki-2020-godes", page: page)
+    try getMovies("/filmes/novinki-2020-godes/", page: page)
   }
 
   public func getAllSeries(page: Int=1) throws -> BookResults {
-    try getMovies("/series/", page: page)
+    try getMovies("/seriez/", page: page)
   }
 
   public func getAnimations(page: Int=1) throws -> BookResults {
@@ -81,7 +81,7 @@ open class KinoKongAPI {
   }
 
   public func getTvShows(page: Int=1) throws -> BookResults {
-    try getMovies("/documentary/", page: page)
+    try getMovies("/doc/", page: page)
   }
 
   public func getMovies(_ path: String, page: Int=1) throws -> BookResults {

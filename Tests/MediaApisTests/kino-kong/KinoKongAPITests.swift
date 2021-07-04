@@ -63,6 +63,8 @@ class KinoKongAPITests: XCTestCase {
 
     let url = try subject.getSeriePlaylistUrl(path)
 
+    print(url)
+
     XCTAssertNotNil(url)
   }
 
@@ -71,7 +73,7 @@ class KinoKongAPITests: XCTestCase {
 
     let url = try subject.getSeriePosterUrl(path)
 
-    print(url)
+    print(url!)
 
     XCTAssertNotNil(url)
   }
@@ -124,6 +126,28 @@ class KinoKongAPITests: XCTestCase {
     XCTAssertEqual(pagination2!.page, 2)
   }
 
+  func testPaginationInNewMovies() throws {
+    let result1 = try subject.getNewMovies(page: 1)
+
+    let pagination1 = result1.pagination
+
+    print(try pagination1.prettify())
+
+    XCTAssertTrue(pagination1!.has_next)
+    XCTAssertFalse(pagination1!.has_previous)
+    XCTAssertEqual(pagination1!.page, 1)
+
+    let result2 = try subject.getNewMovies(page: 2)
+
+    let pagination2 = result2.pagination
+
+    print(try pagination2.prettify())
+
+    XCTAssertTrue(pagination2!.has_next)
+    XCTAssertTrue(pagination2!.has_previous)
+    XCTAssertEqual(pagination2!.page, 2)
+  }
+  
   func testPaginationInMoviesByRating() throws {
     let result1 = try subject.getMoviesByRating(page: 1)
 

@@ -58,11 +58,11 @@ open class KinoTochkaAPI {
   }
 
   public func getNewMovies(page: Int=1) throws -> BookResults {
-    try getMovies("/premier/", page: page)
+    try getMovies("/premieres/", page: page)
   }
 
   public func getAllSeries(page: Int=1) throws -> BookResults {
-    let result = try getMovies("/series/", page: page, serie: true)
+    let result = try getMovies("/serials/", page: page, serie: true)
 
     return BookResults(items: try sanitizeNames(result.items), pagination: result.pagination)
   }
@@ -89,11 +89,11 @@ open class KinoTochkaAPI {
   }
 
   public func getAllAnimations(page: Int=1) throws -> BookResults {
-    try getMovies("/cartoon/", page: page)
+    try getMovies("/cartoons/", page: page)
   }
 
   public func getRussianAnimations(page: Int=1) throws -> BookResults {
-    try getMovies("/cartoon/otechmult/", page: page)
+    try getMovies("/cartoons/otechmult/", page: page)
   }
 
   public func getForeignAnimations(page: Int=1) throws -> BookResults {
