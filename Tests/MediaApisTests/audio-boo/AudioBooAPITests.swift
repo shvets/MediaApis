@@ -20,7 +20,7 @@ class AudioBooAPITests: XCTestCase {
 
     let id = letters[0]["id"]!
 
-    let result = try self.subject.getAuthorsByLetter(id)
+    let result = try subject.getAuthorsByLetter(id)
 
     print(try result.prettify())
 
@@ -40,7 +40,7 @@ class AudioBooAPITests: XCTestCase {
   }
 
   func testGetAllBooks() throws {
-    let result = try self.subject.getAllBooks()
+    let result = try subject.getAllBooks()
 
     print(try result.prettify())
 
@@ -52,9 +52,9 @@ class AudioBooAPITests: XCTestCase {
 
     let letterId = letters[0]["id"]!
 
-    let authors = try self.subject.getAuthorsByLetter(letterId)
+    let authors = try subject.getAuthorsByLetter(letterId)
 
-    let url = (authors[0].value)[0].id
+    let url = AudioBooAPI.SiteUrl + "/" + (authors[0].value)[0].id
 
     let result = try self.subject.getBooks(url)
 
@@ -67,9 +67,9 @@ class AudioBooAPITests: XCTestCase {
     let letters = try subject.getLetters()
 
     if let letterId = letters[0]["id"] {
-      let authors = try self.subject.getAuthorsByLetter(letterId)
+      let authors = try subject.getAuthorsByLetter(letterId)
 
-      let url = (authors[4].value)[0].id
+      let url = AudioBooAPI.SiteUrl + "/" + (authors[4].value)[0].id
 
       let books = try self.subject.getBooks(url)
 
@@ -94,10 +94,14 @@ class AudioBooAPITests: XCTestCase {
 
     XCTAssertNotNil(list)
     XCTAssert(list.count > 0)
+
+    //let file = list.filter { $0.sources != nil && $0.sources!.filter { $0.type == "mp3"} }
+
+    //print(file)
   }
 
   func testGetAudioTracksNew() throws {
-    let url = "http://audioboo.ru/didiktiva/37963-gelbreyt-robert-kormoran-strayk-051-durnaya-krov-kniga-1.html"
+    let url = "https://audioboo.ru/didiktiva/38539-gelbreyt-robert-kormoran-strayk-05-durnaya-krov-polnaya-versiya.html"
 
     let list = try subject.getAudioTracksNew(url)
 

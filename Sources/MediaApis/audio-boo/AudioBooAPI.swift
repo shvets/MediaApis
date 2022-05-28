@@ -46,7 +46,7 @@ open class AudioBooAPI {
     var groups: [String: [NameClassifier.Item]] = [:]
 
     if let document = try getDocument(path) {
-      let items = try document.select("div[class=full-news-content] div a")
+      let items = try document.select("div[class=news-item-content] div a")
 
       for item in items.array() {
         let href = try item.attr("href")
@@ -179,7 +179,8 @@ open class AudioBooAPI {
 
     let pagePath = getPagePath(path: "", page: page)
 
-    let path = AudioBooAPI.getURLPathOnly("\(url)\(pagePath)", baseUrl: AudioBooAPI.SiteUrl)
+   let newUrl = AudioBooAPI.SiteUrl + "/" + url
+    let path = AudioBooAPI.getURLPathOnly("\(newUrl)\(pagePath)", baseUrl: AudioBooAPI.SiteUrl)
     
     if let document = try getDocument(path) {
       let items = try document.select("div[class=biography-main]")
@@ -302,12 +303,20 @@ open class AudioBooAPI {
   public func search(_ query: String, page: Int=1) throws -> [[String: String]] {
     var result = [[String: String]]()
 
-    let path = "engine/ajax/search.php"
+    let path = "engine/ajax/controller.php"
 
-    let content = "query=\(query)"
+    let content = "query=\(query)" +
+            "&user_hash=e49f7fb6c307f5918acf0a8ff5ad4f209e01e36a"
     let body = content.data(using: .utf8, allowLossyConversion: false)
 
-    if let response = try apiClient.request(path, method: .post, body: body),
+    var headers: Set<HttpHeader> = []
+    headers.insert(HttpHeader(field: "content-type", value: "application/x-www-form-urlencoded; charset=UTF-8"))
+
+    var queryItems: Set<URLQueryItem> = []
+    queryItems.insert(URLQueryItem(name: "mod", value: "search"))
+
+    if let response = try apiClient.request(path, method: .post, queryItems: queryItems,
+            headers: headers, body: body),
        let data = response.data,
        let document = try toDocument(data: data) {
       let items = try document.select("a")
@@ -328,13 +337,13 @@ open class AudioBooAPI {
     var document: Document? = nil
 
     if let response = try apiClient.request(path), let data = response.data {
-      document = try data.toDocument(encoding: .windowsCP1251)
+      document = try data.toDocument(encoding: .utf8)
     }
 
     return document
   }
 
-  func toDocument(data: Data, encoding: String.Encoding = .windowsCP1251) throws -> Document? {
+  func toDocument(data: Data, encoding: String.Encoding = .utf8) throws -> Document? {
     try data.toDocument(encoding: encoding)
   }
 }
