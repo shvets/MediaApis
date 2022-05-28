@@ -16,7 +16,7 @@
     "body-parser": "~1.18.3",
     "ts-node": "~8.0.3",
     "typescript": "~3.4.2",
-    "axios": "~0.18.0",
+    "axios": "~0.27.2",
     "request": "~2.88.0"
   },
   "devDependencies": {
