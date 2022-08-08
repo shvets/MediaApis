@@ -1,5 +1,6 @@
 import Foundation
 import SimpleHttpClient
+import Await
 
 open class EtvnetApiClient: ApiClient {
   public let UserAgent = "Etvnet User Agent"
@@ -27,7 +28,7 @@ extension EtvnetApiClient {
       if let items = (try Await.await() { handler in
         self.configFile.read(handler)
       }) {
-        self.configFile.items = items
+        configFile.items = items
       }
     }
   }
@@ -70,7 +71,7 @@ extension EtvnetApiClient {
        let deviceCode = configFile.items["device_code"] {
       result = AuthResult(userCode: userCode, deviceCode: deviceCode)
     } else {
-      if let value = try self.authClient.getActivationCodes(includeClientSecret: includeClientSecret) {
+      if let value = try authClient.getActivationCodes(includeClientSecret: includeClientSecret) {
         if let userCode = value.userCode,
            let deviceCode = value.deviceCode {
 //          self.configFile.items["user_code"] = userCode
@@ -99,8 +100,8 @@ extension EtvnetApiClient {
         if let refreshToken = refreshToken {
           if let value = try updateToken(refreshToken) {
             ok = true
-            self.configFile.items = value.asMap()
-            try self.saveConfig()
+            configFile.items = value.asMap()
+            try saveConfig()
           }
         }
       } catch {
@@ -114,11 +115,11 @@ extension EtvnetApiClient {
 
         do {
           if let deviceCode = deviceCode {
-            if let value = try self.authClient.createToken(deviceCode: deviceCode) {
+            if let value = try authClient.createToken(deviceCode: deviceCode) {
               ok = true
 
-              self.configFile.items = value.asMap()
-              try self.saveConfig()
+              configFile.items = value.asMap()
+              try saveConfig()
             }
           }
         } catch {
@@ -137,13 +138,13 @@ extension EtvnetApiClient {
 
     while !done {
       do {
-        if let value = try self.authClient.createToken(deviceCode: deviceCode) {
+        if let value = try authClient.createToken(deviceCode: deviceCode) {
           done = value.accessToken != nil
 
           if done {
             result = value
 
-            self.configFile.items = value.asMap()
+            configFile.items = value.asMap()
             try saveConfig()
           }
         }
@@ -160,7 +161,7 @@ extension EtvnetApiClient {
   }
 
   func updateToken(_ refreshToken: String) throws -> AuthProperties? {
-    try self.authClient.updateToken(refreshToken: refreshToken)
+    try authClient.updateToken(refreshToken: refreshToken)
   }
 
   func checkAccessData(_ key: String) -> Bool {
@@ -196,12 +197,12 @@ extension EtvnetApiClient {
           let statusCode = response.statusCode
 
           if (statusCode == 401 || statusCode == 400) && !unauthorized {
-            let refreshToken = self.configFile.items["refresh_token"]
+            let refreshToken = configFile.items["refresh_token"]
 
             if let refreshToken = refreshToken {
               if let fullValue = try self.updateToken(refreshToken) {
-                self.configFile.items = fullValue.asMap()
-                try self.saveConfig()
+                configFile.items = fullValue.asMap()
+                try saveConfig()
 
                 result = try self.fullRequest(path: path, to: type, method: method, queryItems: queryItems, unauthorized: true)
               }

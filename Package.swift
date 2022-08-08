@@ -17,7 +17,8 @@ let package = Package(
     .package(url: "https://github.com/scinfu/SwiftSoup", from: "2.3.0"),
     .package(url: "https://github.com/JohnSundell/Files", from: "4.1.1"),
     .package(url: "https://github.com/JohnSundell/Codextended", from: "0.3.0"),
-    .package(path: "../SimpleHttpClient")
+    .package(path: "../SimpleHttpClient"),
+    .package(path: "../Await")
   ],
   targets: [
     .target(

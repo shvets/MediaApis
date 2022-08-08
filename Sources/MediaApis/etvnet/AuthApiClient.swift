@@ -1,5 +1,6 @@
 import Foundation
 import SimpleHttpClient
+import Await
 
 open class AuthApiClient: ApiClient {
   private let ClientId = "a332b9d61df7254dffdc81a260373f25592c94c9"
@@ -40,7 +41,7 @@ open class AuthApiClient: ApiClient {
 
     let request = ApiRequest(path: "device/code", queryItems: queryItems)
 
-    let response = try Await.await() { handler in
+    let response = try Await.await { handler in
       self.fetch(request, handler)
     }
 
@@ -66,7 +67,7 @@ open class AuthApiClient: ApiClient {
 
     let request = ApiRequest(path: "token", queryItems: queryItems)
 
-    let response = try Await.await() { handler in
+    let response = try Await.await { handler in
       self.fetch(request, handler)
     }
 
