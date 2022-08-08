@@ -84,7 +84,7 @@ class AudioBooAPITests: XCTestCase {
   }
 
   func testGetAudioTracks() throws {
-    let url = "http://audioboo.ru/voina/26329-sushinskiy-bogdan-chernye-komissary.html"
+    let url = "http://audioboo.org/voina/26329-sushinskiy-bogdan-chernye-komissary.html"
 
     let playlistUrls = try subject.getPlaylistUrls(url)
 
@@ -101,7 +101,7 @@ class AudioBooAPITests: XCTestCase {
   }
 
   func testGetAudioTracksNew() throws {
-    let url = "https://audioboo.ru/didiktiva/38539-gelbreyt-robert-kormoran-strayk-05-durnaya-krov-polnaya-versiya.html"
+    let url = "https://audioboo.org/didiktiva/38539-gelbreyt-robert-kormoran-strayk-05-durnaya-krov-polnaya-versiya.html"
 
     let list = try subject.getAudioTracksNew(url)
 
